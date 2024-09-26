@@ -3,23 +3,27 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { createBrowserRouter, Route, RouterProvider } from 'react-router-dom'
+import MenuPage from './pages/MenuPage.jsx'
+import DealsPage from './pages/DealsPage.jsx'
+import SettingsPage from './pages/SettingsPage.jsx'
 
 const router = createBrowserRouter([
-  // {
-  //   path: "/",
-  //   element: <LoginPage />
-  // },
   {
-    path: "/menu",
-    element: <App />
-  },
-  {
-    path: "/deals",
-    element: <App />
-  },
-  {
-    path: "/settings",
-    element: <App />
+    element: <App />,
+    children: [
+      {
+        path: "/menu",
+        element: <MenuPage />
+      },
+      {
+        path: "/deals",
+        element: <DealsPage />
+      },
+      {
+        path: "/settings",
+        element: <SettingsPage />
+      }
+    ]
   },
 ])
 
