@@ -23,7 +23,7 @@ function Product() {
                     <span className="text-3xl font-bold text-gray-900 dark:text-white">
                         Rs. {price}
                     </span>
-                    <input onChange={() => setPrice(conPrice*quantityRef.current.value )} ref={quantityRef} placeholder="Enter quantity" type="number" min={1} maxLength={3} onClick={event => console.log(event)}
+                    <input onChange={() => setPrice(conPrice*quantityRef.current.value )} ref={quantityRef} placeholder="Enter quantity" type="number" min={1} maxLength={3} 
             className="text-black bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-1 py-2.5 text-center" />
                 </div>
             </div>
