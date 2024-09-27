@@ -12,6 +12,7 @@ function Header() {
             <ul className="flex gap-4">
                 <Link to="/menu"><li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer  ${pathname === "/menu" ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>Menu</li></Link>
                 <Link to="/deals"><li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer  ${pathname === "/deals" ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>Deals</li></Link>
+                <Link to="/order"><li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer  ${pathname === "/order" ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>Order</li></Link>
                 <Link to="/settings"><li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer  ${pathname === "/settings" ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>Settings</li></Link>
             </ul>
         </div>
