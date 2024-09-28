@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import Order from "../components/Order";
+import OrderHeader from "../components/OrderHeader";
 
 function OrderPage() {
     const orderList = useSelector(store => store.order);
@@ -11,6 +12,7 @@ function OrderPage() {
     
     return (
         <div className="bg-gray-800">
+            <OrderHeader />
             {orderList.map(({name, price, quantity}, index) => {
                 return <Order key={index} name={name} price={price} quantity={quantity}/>
             })}

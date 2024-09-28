@@ -36,17 +36,6 @@ function Product({name}) {
                     defaultValue={1}
                     class="appearance-none w-24 border border-gray-300 rounded-md py-1.5 px-4 text-center focus:outline-none focus:ring-4 focus:ring-blue-300"
                     />
-
-                    {/* <input
-                        onChange={() =>
-                            setPrice(conPrice * quantityRef.current.value)
-                        }
-                        ref={quantityRef}
-                        type="number"
-                        min={1}
-                        maxLength={3}
-                        className="text-black bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-0.5 py-2.5 text-center"
-                    /> */}
                 </div>
             </div>
         </div>

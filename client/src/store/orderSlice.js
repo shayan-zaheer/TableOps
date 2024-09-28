@@ -15,7 +15,7 @@ const orderSlice = createSlice({
             }
         },
         removeItem: (state, action) => {
-            return state.filter(item => item.name !== action.payload.name);
+            return state.filter(item => item.name !== action.payload);
         }
     }
 });
