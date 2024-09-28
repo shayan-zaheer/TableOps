@@ -1,6 +1,6 @@
 function Footer() {
     return (
-      <footer className="border-t border-black drop-shadow-xl bg-gray-800 text-white py-3 text-center w-screen">
+      <footer className="border-t border-black drop-shadow-xl bg-gray-800 text-white py-3 text-center">
         <p>© 2024 Mr. Broast. All rights reserved.</p>
       </footer>
     );

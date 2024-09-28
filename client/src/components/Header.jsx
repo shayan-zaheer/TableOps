@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 function Header() {
     const {pathname} = useLocation();
     return (
-        <div className="flex flex-row items-center justify-between border border-black w-screen py-2 px-6 bg-gray-800 text-white drop-shadow-xl">
+        <div className="flex flex-row items-center justify-between border border-black py-2 px-6 bg-gray-800 text-white drop-shadow-xl">
             <div className="flex items-center justify-start gap-4">
                 <img src="./logo.png" className="w-16 h-16" alt="" />
                 <h1 className="font-serif text-3xl">Mr. Broast</h1>
