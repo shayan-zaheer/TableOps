@@ -1,12 +1,27 @@
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { orderActions } from "../store/orderSlice";
+import toast from "react-hot-toast";
 
 function Product({name}) {
     const dispatch = useDispatch();
     const quantityRef = useRef();
     const conPrice = 350;
     const [price, setPrice] = useState(350);
+
+    const handleAddItem = () => {
+        const quantity = +quantityRef.current.value;
+        dispatch(orderActions.addItem({
+            name,
+            price: conPrice,
+            quantity,
+        }));
+        toast.success(`${quantity} ${name}(s) added to order!`, {
+            duration: 3000, // duration in ms
+            
+        });
+    }
+
     return (
         <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <img
@@ -23,9 +38,7 @@ function Product({name}) {
                     <span className="text-3xl font-bold text-white">
                         Rs. {price}
                     </span>
-                    <button onClick={() => dispatch(orderActions.addItem({
-                        name, price: conPrice, quantity: +quantityRef.current.value
-                    }))} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center">
+                    <button onClick={handleAddItem} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center">
                         Add to Order
                     </button>
                     <input

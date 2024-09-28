@@ -8,7 +8,9 @@ function OrderPage() {
 
     console.log(orderList);
     if (!orderList || orderList.length === 0) {
-        return <h1>No items added yet!</h1>;
+        return <div className="flex flex-col h-screen items-center justify-center bg-gray-800">
+            <h1 className="font-bold text-2xl text-white">No items added yet!</h1>
+            </div>;
     }
 
     return (
