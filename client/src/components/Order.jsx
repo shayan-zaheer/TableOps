@@ -1,8 +1,15 @@
 import { FaTrash } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import { orderActions } from '../store/orderSlice';
+import toast from 'react-hot-toast';
 
 function Order({ name, price, quantity }) {
+
+    const handleDeleteItem = () => {
+        toast.error(`${quantity} ${name}(s) removed!`)
+        dispatch(orderActions.removeItem(name));
+    }
+
     const dispatch = useDispatch();
     return (
         <div className="flex items-center justify-between mx-3 py-5 border-b bg-gray-800 text-white">
@@ -10,7 +17,7 @@ function Order({ name, price, quantity }) {
             <span className="flex-1 text-center">Rs. {price}</span>
             <span className="flex-1 text-center">{quantity}</span>
             <span className="flex-1 text-center">Rs. {price * quantity}</span>
-            <button onClick={() => dispatch(orderActions.removeItem(name))} className="text-red-500 hover:text-red-700">
+            <button onClick={handleDeleteItem} className="text-red-500 hover:text-red-700">
                 <FaTrash />
             </button>
         </div>

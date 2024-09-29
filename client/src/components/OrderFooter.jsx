@@ -1,16 +1,29 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { auditActions } from "../store/auditSlice";
+import { orderActions } from "../store/orderSlice";
 
 function OrderFooter() {
+    const dispatch = useDispatch();
     const orderList = useSelector(store => store.order);
     
-    // Initialize totalPrice to 0 if orders array is empty
     const totalPrice = (orderList && orderList.length > 0) 
         ? orderList.reduce((total, order) => total + order.price * order.quantity, 0) 
         : 0;
 
     const handleConfirmOrder = () => {
         if (totalPrice > 0) {
+            const auditLogEntry = {
+                totalQuantity: orderList.reduce((total, order) => total + order.quantity, 0),
+                totalPrice: totalPrice,
+                items: orderList.map(order => ({ name: order.name, quantity: order.quantity }))
+            };
+    
+            dispatch(auditActions.addAuditLog(auditLogEntry));
+
             alert(`Total Price: Rs. ${totalPrice}`);
+
+            dispatch(orderActions.removeOrder());
+
         } else {
             alert("No items in the order.");
         }
