@@ -11,30 +11,30 @@ function AuditLog() {
     };
 
     return (
-        <div className="p-4 bg-gray-200 rounded-md mt-4">
-            <h2 className="text-xl font-bold">Audit Log</h2>
+        <div className="p-4 bg-gray-900 rounded-md mt-4"> {/* Darker background to match page */}
+            <h2 className="text-xl font-bold text-white">Audit Log</h2> {/* Text color set to white */}
             <button
                 onClick={toggleCollapse}
-                className="bg-[#eee] text-[#444] cursor-pointer p-4 w-full border-none text-left outline-none text-lg hover:bg-[#ccc]"
+                className="bg-gray-700 text-white cursor-pointer p-4 w-full border-none text-left outline-none text-lg hover:bg-gray-600" // Dark button with hover effect
             >
                 {isOpen ? "Hide Logs" : "Show Logs"}
             </button>
             {isOpen && (
-                <div className="bg-gray-300 rounded-md p-2">
+                <div className="bg-gray-800 rounded-md p-4"> {/* Adjusted background for the logs */}
                     {logs.length === 0 ? (
-                        <p>No audit logs available.</p>
+                        <p className="text-gray-300">No audit logs available.</p>
                     ) : (
                         logs.map((order, index) => (
                             <div
                                 key={index}
-                                className="px-0 py-4 overflow-hidden bg-[#f1f1f1] mb-2 rounded"
+                                className="px-4 py-4 overflow-hidden bg-gray-700 mb-2 rounded" // Darker background for each order
                             >
-                                <h3 className="font-bold">Order {index + 1}</h3>
-                                <p>Total Quantity: {order.totalQuantity}</p>
-                                <p>Total Price: Rs. {order.totalPrice}</p>
-                                <h4 className="font-semibold">Items:</h4>
+                                <h3 className="font-bold text-white">Order {index + 1}</h3> {/* White text */}
+                                <p className="text-gray-300">Total Quantity: {order.totalQuantity}</p> {/* Light text */}
+                                <p className="text-gray-300">Total Price: Rs. {order.totalPrice}</p>
+                                <h4 className="font-semibold text-white">Items:</h4>
                                 {order.items.map((item, idx) => (
-                                    <p key={idx}>
+                                    <p key={idx} className="text-gray-300">
                                         {item.name} (Quantity: {item.quantity})
                                     </p>
                                 ))}
