@@ -27,10 +27,10 @@ function AuditLog() {
                         logs.map((order, index) => (
                             <div
                                 key={index}
-                                className="px-4 py-4 overflow-hidden bg-gray-700 mb-2 rounded" // Darker background for each order
+                                className="px-4 py-4 overflow-hidden bg-gray-700 mb-2 rounded"
                             >
-                                <h3 className="font-bold text-white">Order {index + 1}</h3> {/* White text */}
-                                <p className="text-gray-300">Total Quantity: {order.totalQuantity}</p> {/* Light text */}
+                                <h3 className="font-bold text-white">Order {index + 1}</h3>
+                                <p className="text-gray-300">Total Quantity: {order.totalQuantity}</p>
                                 <p className="text-gray-300">Total Price: Rs. {order.totalPrice}</p>
                                 <h4 className="font-semibold text-white">Items:</h4>
                                 {order.items.map((item, idx) => (
