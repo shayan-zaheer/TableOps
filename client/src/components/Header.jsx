@@ -43,10 +43,10 @@ function Header() {
                     </li>
                     {isProductsDropdownOpen && (
                         <div className="absolute left-0 w-40 bg-gray-700 text-white rounded-md shadow-lg z-10">
-                            <Link to="/products/create">
+                            <Link to="/products?action=create">
                                 <li className="py-2 px-4 hover:bg-green-100 hover:text-black cursor-pointer">Add Product</li>
                             </Link>
-                            <Link to="/products/update">
+                            <Link to="/products?action=update">
                                 <li className="py-2 px-4 hover:bg-green-100 hover:text-black cursor-pointer">Update Product</li>
                             </Link>
                             <Link to="/products/delete">
