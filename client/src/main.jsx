@@ -10,6 +10,7 @@ import SettingsPage from './pages/SettingsPage.jsx'
 import Order from './components/Order.jsx'
 import OrderPage from "./pages/OrderPage.jsx"
 import store from './store/index.js'
+import CategoriesPage from './pages/CategoriesPage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -30,12 +31,14 @@ const router = createBrowserRouter([
       {
         path: "/settings",
         element: <SettingsPage />
+      },
+      {
+        path: "/categories",
+        element: <CategoriesPage />
       }
     ]
   },
 ])
-
-Provider
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
