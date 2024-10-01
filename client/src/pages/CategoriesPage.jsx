@@ -9,12 +9,13 @@ const CategoriesPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/categories', { name, description });
+            const response = await axios.post('http://localhost:8000/api/categories', { name, description });
             setMessage(response.data.message);
             setName('');
             setDescription('');
         } catch (error) {
-            setMessage('Error creating category');
+            console.log(error);
+            setMessage(error.error);
         }
     };
 
