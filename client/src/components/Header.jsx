@@ -37,8 +37,8 @@ function Header() {
                     </li>
                 </Link>
 
-                <div className="relative">
-                    <li onPointerOver={toggleProductsDropdown} className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname.includes("/products") ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
+                <div className="relative" onMouseLeave={() => setProductsDropdownOpen(false)}>
+                    <li onMouseEnter={toggleProductsDropdown} className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname.includes("/products") ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
                         Products
                     </li>
                     {isProductsDropdownOpen && (
@@ -56,20 +56,17 @@ function Header() {
                     )}
                 </div>
 
-                <div className="relative">
-                    <li onPointerOver={toggleCategoriesDropdown} className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname.includes("/categories") ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
+                <div className="relative" onMouseLeave={() => setCategoriesDropdownOpen(false)}>
+                    <li onMouseEnter={toggleCategoriesDropdown} className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname.includes("/categories") ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
                         Categories
                     </li>
                     {isCategoriesDropdownOpen && (
                         <div className="absolute left-0 w-40 bg-gray-700 text-white rounded-md shadow-lg z-10">
-                            <Link to="/categories/create">
+                            <Link to="/categories?action=create">
                                 <li className="py-2 px-4 hover:bg-green-100 hover:text-black cursor-pointer">Add Category</li>
                             </Link>
-                            <Link to="/categories/update">
+                            <Link to="/categories?action=update">
                                 <li className="py-2 px-4 hover:bg-green-100 hover:text-black cursor-pointer">Update Category</li>
-                            </Link>
-                            <Link to="/categories/delete">
-                                <li className="py-2 px-4 hover:bg-green-100 hover:text-black cursor-pointer">Delete Category</li>
                             </Link>
                         </div>
                     )}
