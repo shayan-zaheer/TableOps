@@ -16,6 +16,7 @@ function CreateCategory() {
                 toast.success(`${title} added as category!`)
             }
         } catch (error) {
+            console.log(error);
             if(error?.response?.data?.error?.code == 11000){
                 toast.error(`${title} is already in categories!`)
             }

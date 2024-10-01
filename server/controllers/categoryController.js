@@ -34,12 +34,12 @@ const getCategoryById = async (req, res) => {
 
 const updateCategory = async (req, res) => {
     try {
-        const { newTitle } = req.body;
+        const { title } = req.body;
         const categoryId = req.params;
         console.log(categoryId);
         const category = await Category.findByIdAndUpdate(
             req.params.id,
-            { newTitle },
+            { title },
             { new: true }
         );
         if (!category) {

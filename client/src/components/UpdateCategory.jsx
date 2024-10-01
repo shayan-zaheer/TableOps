@@ -25,11 +25,11 @@ const UpdateCategory = () => {
         e.preventDefault();
         try {
             const oldTitleId = oldTitleRef.current.value;
-            const newTitle = newTitleRef.current.value;
+            const title = newTitleRef.current.value;
 
             console.log(oldTitleId);
 
-            const response = await axios.put(`http://localhost:8000/api/categories/${oldTitleId}`, { newTitle });
+            const response = await axios.put(`http://localhost:8000/api/categories/${oldTitleId}`, { title });
             if (response.status === 200) {
                 toast.success(`${title} updated successfully!`);
             }
