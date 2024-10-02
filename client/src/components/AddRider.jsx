@@ -28,7 +28,7 @@ const AddRider = ({setRiders}) => {
     };
 
     return (
-        <div className="bg-white shadow-lg rounded-lg p-6 mb-4 w-96">
+        <div className="bg-[rgb(207,156,90)] shadow-lg rounded-lg p-6 mb-4 w-96">
             <h2 className="text-xl font-bold mb-4">Add Rider</h2>
             <form onSubmit={handleSubmit}>
                 <input

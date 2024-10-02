@@ -12,7 +12,7 @@ function Order({ name, price, quantity }) {
 
     const dispatch = useDispatch();
     return (
-        <div className="flex items-center justify-between mx-3 py-5 border-b bg-gray-800 text-white">
+        <div className="flex items-center justify-between mx-3 py-5 border-b bg-[rgb(109,80,44)] text-white">
             <span className="flex-1">{name}</span>
             <span className="flex-1 text-center">Rs. {price}</span>
             <span className="flex-1 text-center">{quantity}</span>

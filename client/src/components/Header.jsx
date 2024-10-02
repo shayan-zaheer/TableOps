@@ -54,7 +54,7 @@ function Header() {
                         Products
                     </li>
                     {isProductsDropdownOpen && (
-                        <div className="absolute left-0 w-40 bg-gray-700 text-white rounded-md shadow-lg z-10">
+                        <div className="absolute left-0 w-40 bg-[rgb(160,99,25)] text-white rounded-md shadow-lg z-10">
                             <Link to="/products?action=create">
                                 <li className="py-2 px-4 hover:bg-green-100 hover:text-black cursor-pointer">Add Product</li>
                             </Link>
@@ -73,7 +73,7 @@ function Header() {
                         Categories
                     </li>
                     {isCategoriesDropdownOpen && (
-                        <div className="absolute left-0 w-40 bg-gray-700 text-white rounded-md shadow-lg z-10">
+                        <div className="absolute left-0 w-40 bg-[rgb(160,99,25)]  text-white rounded-md shadow-lg z-10">
                             <Link to="/categories?action=create">
                                 <li className="py-2 px-4 hover:bg-green-100 hover:text-black cursor-pointer">Add Category</li>
                             </Link>

@@ -42,21 +42,20 @@ function OrderFooter() {
             const deliveryOrderEntry = {
                 items: orderList.map(order => ({ name: order.name, quantity: order.quantity })),
                 totalPrice: totalPrice,
-                status: "Pending", // Set status to pending
-                driver: null, // Assign driver later
+                status: "Pending",
+                driver: null,
             };
 
-            // Dispatch your action to save the delivery order to your store
             dispatch(orderActions.addDeliveryOrder(deliveryOrderEntry)); // Adjust this as per your slice
 
             alert(`Delivery order confirmed! Status: Pending. Total Price: Rs. ${totalPrice}`);
-            dispatch(orderActions.removeOrder()); // Clear the order
+            dispatch(orderActions.removeOrder());
         }
     };
 
     return (
         <div>
-            <div className="flex justify-between items-center mt-4 p-3 bg-gray-700 text-white rounded">
+            <div className="flex justify-between items-center mt-4 p-3 bg-[rgb(109,94,76)] text-white rounded">
                 <span className="font-semibold">Total Price: Rs. {totalPrice}</span>
                 <button onClick={handleConfirmOrder} className="text-green-500 hover:text-green-700 font-semibold">
                     Confirm Order

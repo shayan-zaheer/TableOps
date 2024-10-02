@@ -24,7 +24,7 @@ function CreateCategory() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex items-center justify-center min-h-screen bg-[rgb(255,206,146)]">
             <div className="bg-white shadow-lg rounded-lg p-6 w-96">
                 <h2 className="text-xl font-bold mb-4">Create Category</h2>
                 <form onSubmit={handleSubmit}>
