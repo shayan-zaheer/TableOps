@@ -42,7 +42,7 @@ const DeleteRider = ({riders, setRiders}) => {
 
     return (
         <div className="bg-white shadow-lg rounded-lg p-6 mb-4 w-96">
-            <h2 className="text-xl font-bold mb-4">Delete Driver</h2>
+            <h2 className="text-xl font-bold mb-4">Delete Rider</h2>
             <form onSubmit={handleDelete}>
                 <select 
                     ref={riderIdRef}

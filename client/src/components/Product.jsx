@@ -23,7 +23,7 @@ function Product({ name, price }) {
     };
 
     return (
-        <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full max-w-sm border border-gray-800 rounded-lg shadow bg-[rgb(124,99,67)]">
             <img
                 className="p-8 rounded-t-lg object-cover w-full h-80"
                 src={`${name.split(" ").join("-").toLowerCase()}.png`}

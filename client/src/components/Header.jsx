@@ -9,19 +9,19 @@ function Header() {
 
     const toggleProductsDropdown = () => {
         setProductsDropdownOpen((prev) => !prev);
-        setCategoriesDropdownOpen(false); // Close categories dropdown if products is opened
+        setCategoriesDropdownOpen(false);
     };
 
     const toggleCategoriesDropdown = () => {
         setCategoriesDropdownOpen((prev) => !prev);
-        setProductsDropdownOpen(false); // Close products dropdown if categories is opened
+        setProductsDropdownOpen(false);
     };
 
     return (
-        <div className="flex flex-row items-center justify-between border border-black py-2 px-6 bg-gray-800 text-white drop-shadow-xl">
+        <div className="flex flex-row items-center justify-between border border-black py-2 px-6 bg-[rgb(249,159,49)] text-black drop-shadow-xl">
             <div className="flex items-center justify-start gap-4">
                 <img src="./logo.png" className="w-16 h-16" alt="Logo" />
-                <h1 className="font-serif text-3xl">Mr. Broast</h1>
+                <h1 className="font-serif font-bold text-3xl">Natural Mr. Broast</h1>
             </div>
 
             <ul className="flex gap-4 relative">
@@ -40,6 +40,12 @@ function Header() {
                 <Link to="/order">
                     <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/order" ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
                         Orders
+                    </li>
+                </Link>
+
+                <Link to="/riders">
+                    <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/riders" ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
+                        Riders
                     </li>
                 </Link>
 

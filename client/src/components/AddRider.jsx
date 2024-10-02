@@ -17,7 +17,7 @@ const AddRider = ({setRiders}) => {
                 toast.success(`${name} added as a rider!`);
 
                 setRiders(prevRiders => [...prevRiders, response.data]); 
-                
+
                 nameRef.current.value = '';
                 phoneRef.current.value = '';
             }
@@ -29,7 +29,7 @@ const AddRider = ({setRiders}) => {
 
     return (
         <div className="bg-white shadow-lg rounded-lg p-6 mb-4 w-96">
-            <h2 className="text-xl font-bold mb-4">Add Driver</h2>
+            <h2 className="text-xl font-bold mb-4">Add Rider</h2>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"

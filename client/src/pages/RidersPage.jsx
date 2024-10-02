@@ -7,7 +7,6 @@ import DeleteRider from '../components/DeleteRider';
 const RidersPage = () => {
     const [riders, setRiders] = useState([]);
 
-    // Fetch drivers from the API
     useEffect(() => {
         const fetchRiders = async () => {
             try {
@@ -26,11 +25,11 @@ const RidersPage = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h2 className="text-2xl font-bold mb-4">Driver Management</h2>
+            <h2 className="text-2xl font-bold mb-4">Rider Management</h2>
             <AddRider riders={riders} setRiders={setRiders}/>
             <DeleteRider riders={riders} setRiders={setRiders} />
             <div className="mt-6 w-96">
-                <h3 className="text-xl font-semibold mb-2">Registered Drivers</h3>
+                <h3 className="text-xl font-semibold mb-2">Registered Riders</h3>
                 <ul className="list-disc list-inside">
                     {riders.map(rider => (
                         <li key={rider._id}>{rider.name} - {rider.phone}</li>
