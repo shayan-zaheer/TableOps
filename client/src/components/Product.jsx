@@ -3,11 +3,11 @@ import { useDispatch } from "react-redux";
 import { orderActions } from "../store/orderSlice";
 import toast from "react-hot-toast";
 
-function Product({ name, price }) {
+function Product({ name, price, image }) {
     const dispatch = useDispatch();
     const quantityRef = useRef();
     const conPrice = price;
-    const [priceState, setPriceState] = useState(price || 350);
+    const [priceState, setPriceState] = useState(price);
 
     const handleAddItem = () => {
         const quantity = +quantityRef.current.value;
@@ -26,7 +26,7 @@ function Product({ name, price }) {
         <div className="w-full max-w-sm border border-gray-800 rounded-lg shadow bg-[rgb(124,99,67)]">
             <img
                 className="p-8 rounded-t-lg object-cover w-full h-80"
-                src={`${name.split(" ").join("-").toLowerCase()}.png`}
+                src={image}
                 alt="product image"
             />
             <div className="px-5 pb-5">

@@ -63,10 +63,21 @@ const deleteCategory = async (req, res) => {
     }
 };
 
+const getCategoriesWithProducts = async (req, res) => {
+    try {
+        const categories = await Category.find().populate('products');
+        res.status(200).json(categories);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching categories with products', error });
+    }
+};
+
+
 module.exports = {
     createCategory,
     getCategories,
     getCategoryById,
     updateCategory,
     deleteCategory,
+    getCategoriesWithProducts
 };

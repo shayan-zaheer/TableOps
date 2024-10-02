@@ -16,7 +16,7 @@ function OrderPage() {
     }
 
     return (
-        <>
+        <div className="h-screen bg-[rgb(218,174,120)]">
             <div className="bg-[rgb(109,80,44)]">
                 <OrderHeader />
                 {orderList.map(({ name, price, quantity }, index) => {
@@ -31,7 +31,7 @@ function OrderPage() {
                 })}
             </div>
             <OrderFooter />
-        </>
+        </div>
     );
 }
 

@@ -20,37 +20,37 @@ function Header() {
     return (
         <div className="flex flex-row items-center justify-between border border-black py-2 px-6 bg-[rgb(249,159,49)] text-black drop-shadow-xl">
             <div className="flex items-center justify-start gap-4">
-                <img src="./logo.png" className="w-16 h-16" alt="Logo" />
+                <img src="images/logo.png" className="w-16 h-16" alt="Logo" />
                 <h1 className="font-serif font-bold text-3xl">Natural Mr. Broast</h1>
             </div>
 
             <ul className="flex gap-4 relative">
                 <Link to="/menu">
-                    <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/menu" ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
+                    <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/menu" ? "bg-[rgb(129,86,29)]  text-white" : "hover:bg-[rgb(126,101,69)] hover:text-white text-black"}`}>
                         Menu
                     </li>
                 </Link>
 
                 <Link to="/deals">
-                    <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/deals" ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
+                    <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/deals" ? "bg-[rgb(129,86,29)]  text-white" : "hover:bg-[rgb(126,101,69)] hover:text-white text-black"}`}>
                         Deals
                     </li>
                 </Link>
 
                 <Link to="/order">
-                    <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/order" ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
+                    <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/order" ? "bg-[rgb(129,86,29)]  text-white" : "hover:bg-[rgb(126,101,69)] hover:text-white text-black"}`}>
                         Orders
                     </li>
                 </Link>
 
                 <Link to="/riders">
-                    <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/riders" ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
+                    <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/riders" ? "bg-[rgb(129,86,29)]  text-white" : "hover:bg-[rgb(126,101,69)] hover:text-white text-black"}`}>
                         Riders
                     </li>
                 </Link>
 
                 <div className="relative" onMouseLeave={() => setProductsDropdownOpen(false)}>
-                    <li onMouseEnter={toggleProductsDropdown} className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname.includes("/products") ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
+                    <li onMouseEnter={toggleProductsDropdown} className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname.includes("/products") ? "bg-[rgb(129,86,29)]  text-white" : "hover:bg-[rgb(126,101,69)] hover:text-white text-black"}`}>
                         Products
                     </li>
                     {isProductsDropdownOpen && (
@@ -69,7 +69,7 @@ function Header() {
                 </div>
 
                 <div className="relative" onMouseLeave={() => setCategoriesDropdownOpen(false)}>
-                    <li onMouseEnter={toggleCategoriesDropdown} className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname.includes("/categories") ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
+                    <li onMouseEnter={toggleCategoriesDropdown} className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname.includes("/categories") ? "bg-[rgb(129,86,29)]  text-white" : "hover:bg-[rgb(126,101,69)] hover:text-white text-black"}`}>
                         Categories
                     </li>
                     {isCategoriesDropdownOpen && (
@@ -85,7 +85,7 @@ function Header() {
                 </div>
 
                 <Link to="/settings">
-                    <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/settings" ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
+                    <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/settings" ? "bg-[rgb(129,86,29)]  text-white" : "hover:bg-[rgb(126,101,69)] hover:text-white text-black"}`}>
                         Settings
                     </li>
                 </Link>

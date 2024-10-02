@@ -6,6 +6,7 @@ function CreateProduct() {
     const nameRef = useRef();
     const categoryRef = useRef();
     const priceRef = useRef();
+    const imageRef = useRef();
     const [categories, setCategories] = useState([]);
 
     // Fetch categories to populate the category dropdown
@@ -25,24 +26,31 @@ function CreateProduct() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
             const name = nameRef.current.value;
             const category = categoryRef.current.value;
             const price = parseFloat(priceRef.current.value); // Ensure price is a number
+            const image = imageRef.current.files[0]; // Get the uploaded image
 
-            console.log("Product Data:", { name, category, price });
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('category', category);
+            formData.append('price', price);
+            formData.append('image', image); // Append image to formData
 
-            const response = await axios.post('http://localhost:8000/api/products', { name, category, price });
+            const response = await axios.post('http://localhost:8000/api/products', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
             if (response.status === 201) {
                 toast.success(`${name} added as product!`);
             }
         } catch (error) {
             console.log(error);
-            if (error?.response?.data?.error?.code === 11000) {
-                toast.error(`${name} already exists!`);
-            } else {
-                toast.error('Error creating product.');
-            }
+            toast.error('Error creating product.');
         }
     };
 
@@ -74,6 +82,13 @@ function CreateProduct() {
                         ref={priceRef}
                         required
                         className="w-full p-2 border border-gray-300 rounded-md mb-4"
+                    />
+                    <input
+                        type="file"
+                        ref={imageRef}
+                        required
+                        className="w-full p-2 border border-gray-300 rounded-md mb-4"
+                        accept="image/*"
                     />
                     <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-200">
                         Create Product

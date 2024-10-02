@@ -1,11 +1,17 @@
 const Product = require("../models/product");
+const Category = require("../models/category");
 
 // Create a new product
 const createProduct = async (req, res) => {
     try {
-        const { name, category, price, stock } = req.body;
-        const product = new Product({ name, category, price, stock });
+        const { name, category, price } = req.body;
+        const image = req.file ? `/images/${req.file.filename}` : '';
+
+        const product = new Product({ name, category, price, image });
         await product.save();
+
+        await Category.findByIdAndUpdate(category, { $push: { products: product._id } });
+
         res.status(201).json({ message: 'Product created successfully', product });
     } catch (error) {
         res.status(500).json({ message: 'Error creating product', error });
