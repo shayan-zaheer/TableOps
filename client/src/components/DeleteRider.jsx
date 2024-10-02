@@ -10,6 +10,7 @@ const DeleteRider = () => {
         const fetchRiders = async () => {
             try {
                 const response = await axios.get('http://localhost:8000/api/riders');
+                console.log(response);
                 setRiders(response.data);
             } catch (error) {
                 console.error('Error fetching drivers:', error);
@@ -23,12 +24,12 @@ const DeleteRider = () => {
     const handleDelete = async (e) => {
         e.preventDefault();
         try {
-            const driverId = driverIdRef.current.value;
+            const riderId = riderIdRef.current.value;
 
-            const response = await axios.delete(`http://localhost:8000/api/drivers/${driverId}`);
+            const response = await axios.delete(`http://localhost:8000/api/riders/${riderId}`);
             if (response.status === 200) {
-                toast.success('Driver deleted successfully!');
-                driverIdRef.current.value = ''; // Reset the input
+                toast.success('Rider deleted successfully!');
+                riderIdRef.current.value = ''; // Reset the input
             }
         } catch (error) {
             console.error(error);

@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const cors = require("cors");
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const riderRoutes = require('./routes/riderRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(cors({
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/riders', riderRoutes)
 
 mongoose.connect(process.env.MONGO_URL).then((conObj)=>{
     console.log("DB Connection Successful!");

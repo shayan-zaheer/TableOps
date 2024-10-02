@@ -19,13 +19,19 @@ const RidersPage = () => {
             }
         };
 
+        const handleDriverAdded = () => {
+            fetchRiders();
+        };
+        
         fetchRiders();
     }, []);
+
+
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
             <h2 className="text-2xl font-bold mb-4">Driver Management</h2>
-            <AddRider />
+            <AddRider onRefresh={handleDriverAdded} />
             <DeleteRider />
             <div className="mt-6 w-96">
                 <h3 className="text-xl font-semibold mb-2">Registered Drivers</h3>

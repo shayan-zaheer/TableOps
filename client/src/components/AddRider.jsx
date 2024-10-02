@@ -15,6 +15,7 @@ const AddRider = () => {
             const response = await axios.post('http://localhost:8000/api/riders', { name, phone });
             if (response.status === 201) {
                 toast.success(`${name} added as a rider!`);
+                
                 nameRef.current.value = '';
                 phoneRef.current.value = '';
             }
