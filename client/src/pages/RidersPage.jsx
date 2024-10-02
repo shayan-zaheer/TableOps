@@ -19,10 +19,6 @@ const RidersPage = () => {
             }
         };
 
-        const handleDriverAdded = () => {
-            fetchRiders();
-        };
-        
         fetchRiders();
     }, []);
 
@@ -31,8 +27,8 @@ const RidersPage = () => {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
             <h2 className="text-2xl font-bold mb-4">Driver Management</h2>
-            <AddRider onRefresh={handleDriverAdded} />
-            <DeleteRider />
+            <AddRider riders={riders} setRiders={setRiders}/>
+            <DeleteRider riders={riders} setRiders={setRiders} />
             <div className="mt-6 w-96">
                 <h3 className="text-xl font-semibold mb-2">Registered Drivers</h3>
                 <ul className="list-disc list-inside">

@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
-const AddRider = () => {
+const AddRider = ({setRiders}) => {
     const nameRef = useRef();
     const phoneRef = useRef();
 
@@ -15,13 +15,15 @@ const AddRider = () => {
             const response = await axios.post('http://localhost:8000/api/riders', { name, phone });
             if (response.status === 201) {
                 toast.success(`${name} added as a rider!`);
+
+                setRiders(prevRiders => [...prevRiders, response.data]); 
                 
                 nameRef.current.value = '';
                 phoneRef.current.value = '';
             }
         } catch (error) {
             console.error(error);
-            toast.error('Error adding driver.');
+            toast.error('Error adding rider.');
         }
     };
 

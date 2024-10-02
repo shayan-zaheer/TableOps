@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
-const DeleteRider = () => {
+const DeleteRider = ({riders, setRiders}) => {
     const riderIdRef = useRef();
-    const [riders, setRiders] = useState([]);
 
     useEffect(() => {
         const fetchRiders = async () => {
@@ -29,7 +28,11 @@ const DeleteRider = () => {
             const response = await axios.delete(`http://localhost:8000/api/riders/${riderId}`);
             if (response.status === 200) {
                 toast.success('Rider deleted successfully!');
-                riderIdRef.current.value = ''; // Reset the input
+
+                setRiders(prevRiders => prevRiders.filter(rider => rider._id !== riderId));
+
+
+                riderIdRef.current.value = '';
             }
         } catch (error) {
             console.error(error);
