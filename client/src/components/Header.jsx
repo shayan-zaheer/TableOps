@@ -37,6 +37,12 @@ function Header() {
                     </li>
                 </Link>
 
+                <Link to="/order">
+                    <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/order" ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
+                        Orders
+                    </li>
+                </Link>
+
                 <div className="relative" onMouseLeave={() => setProductsDropdownOpen(false)}>
                     <li onMouseEnter={toggleProductsDropdown} className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname.includes("/products") ? "bg-green-50 text-black" : "hover:bg-green-100 hover:text-black text-white"}`}>
                         Products

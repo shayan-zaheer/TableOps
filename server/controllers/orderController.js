@@ -1,7 +1,6 @@
 const Order = require('../models/order');
 const Product = require('../models/product');
 
-// Create a new order
 const createOrder = async (req, res) => {
     try {
         const { products } = req.body;

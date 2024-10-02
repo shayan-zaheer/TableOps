@@ -18,23 +18,31 @@ const orderSchema = new mongoose.Schema({
     totalAmount: {
         type: Number,
         required: true,
-        min: 0
+    },
+    type: {
+        type: String,
+        enum: ['takeaway', 'delivery'],
+        required: true,
+    },
+    driver: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Driver',
+    },
+    deliveryAddress: {
+        type: String,
+        required: function() { return this.type === 'delivery'; }, // Required only for delivery
+    },
+    status: {
+        type: String,
+        enum: ['Pending', 'Delivered', 'Cancelled'],
+        default: 'Pending',
     },
     createdAt: {
         type: Date,
-        default: Date.now
-    }
-});
-
-orderSchema.pre('save', function (next) {
-    const order = this;
-
-    order.totalAmount = order.products.reduce((acc, item) => {
-        return acc + item.quantity * item.product.price;
-    }, 0);
-
-    next();
+        default: Date.now,
+    },
 });
 
 const Order = mongoose.model('Order', orderSchema);
+
 module.exports = Order;

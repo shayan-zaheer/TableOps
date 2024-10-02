@@ -11,6 +11,7 @@ import OrderPage from "./pages/OrderPage.jsx"
 import store from './store/index.js'
 import CategoriesPage from './pages/CategoriesPage.jsx'
 import ProductsPage from './pages/ProductsPage.jsx'
+import RidersPage from './pages/RidersPage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "/products",
         element: <ProductsPage />
+      },
+      {
+        path: "/riders",
+        element: <RidersPage />
       }
     ]
   },
