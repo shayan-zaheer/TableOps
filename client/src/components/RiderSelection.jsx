@@ -47,7 +47,7 @@ function RiderSelection({ orderDetails, onRiderAssigned }) {
                     <option key={rider._id} value={rider._id}>{rider.name}</option>
                 ))}
             </select>
-            <button onClick={handleAssignRider}>Assign Rider</button>
+            <button className='ml-2 p-2 bg-[rgb(145,106,24)] hover:bg-[rgb(211,175,97)] rounded-sm mb-2' onClick={handleAssignRider}>Assign Rider</button>
         </div>
     );
 }

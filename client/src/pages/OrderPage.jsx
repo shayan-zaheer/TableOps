@@ -27,9 +27,9 @@ function OrderPage() {
     const handleCreateOrder = async () => {
         try {
             const response = await axios.post('http://localhost:8000/api/orders', {
-                products: orderList, // Send products
-                totalAmount: 1000,   // Replace with actual total
-                type: 'delivery'     // Set the type to delivery
+                products: orderList,
+                totalAmount: 1000,
+                type: 'delivery'    
             });
             setCreatedOrder(response.data); // Store the created order with _id
             toast.success('Order created successfully!');
@@ -60,7 +60,7 @@ function OrderPage() {
                 ))}
                 
                 {!createdOrder && (
-                    <button onClick={handleCreateOrder}>Create Delivery Order</button>
+                    <button className="block w-full p-2 bg-[rgb(167,132,36)] text-white rounded hover:bg-[rgb(233,195,90)]" onClick={handleCreateOrder}>Create Delivery Order</button>
                 )}
 
                 {/* Show Rider Selection only after the order is created */}

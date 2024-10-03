@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { orderActions } from '../store/orderSlice';
+import { auditActions } from '../store/auditSlice';
 
 function PendingDeliveryOrders() {
+    const dispatch = useDispatch();
     const [pendingOrders, setPendingOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    console.log("PENDING ORDERS:", pendingOrders);
-
     useEffect(() => {
-        // Fetch pending delivery orders when the component mounts
         const fetchPendingOrders = async () => {
             try {
                 const response = await axios.get('http://localhost:8000/api/orders/pendingdelivery');
@@ -30,13 +31,42 @@ function PendingDeliveryOrders() {
 
     const handleStatusChange = async (orderId, newStatus) => {
         try {
+            const orderToUpdate = pendingOrders.find(order => order._id === orderId);
+    
+            if (!orderToUpdate) {
+                throw new Error('Order not found');
+            }
+    
             // Update the order status
             await axios.put(`http://localhost:8000/api/orders/${orderId}/update-status`, { status: newStatus });
+    
+            const totalQuantity = orderToUpdate.products.reduce((total, item) => total + item.quantity, 0);
+
+            console.log(orderToUpdate);
+
+            const totalPrice = orderToUpdate.totalAmount;
+    
+            const auditLogEntry = {
+                orderId: orderId,
+                totalQuantity: totalQuantity,
+                totalPrice,
+                items: orderToUpdate.products.map(item => ({
+                    name: item.product.name,
+                    quantity: item.quantity,
+                })),
+            };
+    
+            console.log(auditLogEntry);
+
+            dispatch(auditActions.addAuditLog(auditLogEntry));
+    
             toast.success('Order status updated successfully');
-            // Refresh the list of pending orders after the update
+
             setPendingOrders((prevOrders) =>
                 prevOrders.filter((order) => order._id !== orderId)
             );
+
+            dispatch(orderActions.removeOrder());
         } catch (error) {
             console.error('Error updating order status:', error);
             toast.error('Error updating order status');

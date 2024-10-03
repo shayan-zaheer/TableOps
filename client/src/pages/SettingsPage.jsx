@@ -30,13 +30,13 @@ function AuditLog() {
     }, [selectedYear, selectedMonth, logs]);
 
     return (
-        <div className="p-4 bg-gray-900 rounded-md mt-4"> {/* Darker background to match page */}
+        <div className="p-4 bg-[rgb(207,156,90)] rounded-md mt-4"> {/* Updated background color */}
             <h2 className="text-xl font-bold text-white">Audit Log</h2> {/* Text color set to white */}
 
             {/* Dropdowns for Year and Month */}
             <div className="flex space-x-4 mb-4">
                 <select
-                    className="bg-gray-700 text-white p-2 rounded"
+                    className="bg-[rgb(255,206,146)] text-black p-2 rounded" 
                     value={selectedYear}
                     onChange={(e) => setSelectedYear(e.target.value)}
                 >
@@ -50,26 +50,17 @@ function AuditLog() {
                 </select>
 
                 <select
-                    className="bg-gray-700 text-white p-2 rounded"
+                    className="bg-[rgb(255,206,146)] text-black p-2 rounded" 
                     value={selectedMonth}
                     onChange={(e) => setSelectedMonth(e.target.value)}
                 >
                     <option value="">Select Month</option>
                     {/* Add options for months */}
-                    {[
-                        { name: "January", value: 1 },
-                        { name: "February", value: 2 },
-                        { name: "March", value: 3 },
-                        { name: "April", value: 4 },
-                        { name: "May", value: 5 },
-                        { name: "June", value: 6 },
-                        { name: "July", value: 7 },
-                        { name: "August", value: 8 },
-                        { name: "September", value: 9 },
-                        { name: "October", value: 10 },
-                        { name: "November", value: 11 },
-                        { name: "December", value: 12 },
-                    ].map((month) => (
+                    {[{ name: "January", value: 1 }, { name: "February", value: 2 }, { name: "March", value: 3 },
+                      { name: "April", value: 4 }, { name: "May", value: 5 }, { name: "June", value: 6 },
+                      { name: "July", value: 7 }, { name: "August", value: 8 }, { name: "September", value: 9 },
+                      { name: "October", value: 10 }, { name: "November", value: 11 }, { name: "December", value: 12 }]
+                      .map((month) => (
                         <option key={month.value} value={month.value}>
                             {month.name}
                         </option>
@@ -79,27 +70,27 @@ function AuditLog() {
 
             <button
                 onClick={toggleCollapse}
-                className="bg-gray-700 text-white cursor-pointer p-4 w-full border-none text-left outline-none text-lg hover:bg-gray-600" // Dark button with hover effect
+                className="bg-[rgb(255,206,146)] text-black cursor-pointer p-4 w-full border-none text-left outline-none text-lg hover:bg-[rgb(207,156,90)]"
             >
                 {isOpen ? "Hide Logs" : "Show Logs"}
             </button>
 
             {isOpen && (
-                <div className="bg-gray-800 rounded-md p-4"> {/* Adjusted background for the logs */}
+                <div className="bg-[rgb(207,156,90)] rounded-md p-4"> {/* Updated background for the logs */}
                     {filteredLogs.length === 0 ? (
-                        <p className="text-gray-300">No audit logs available for this period.</p>
+                        <p className="text-gray-900">No audit logs available for this period.</p>
                     ) : (
                         filteredLogs.map((order, index) => (
                             <div
                                 key={index}
-                                className="px-4 py-4 overflow-hidden bg-gray-700 mb-2 rounded"
+                                className="px-4 py-4 overflow-hidden bg-[rgb(255,206,146)] mb-2 rounded"
                             >
-                                <h3 className="font-bold text-white">Order {index + 1}</h3>
-                                <p className="text-gray-300">Total Quantity: {order.totalQuantity}</p>
-                                <p className="text-gray-300">Total Price: Rs. {order.totalPrice}</p>
-                                <h4 className="font-semibold text-white">Items:</h4>
+                                <h3 className="font-bold text-black">Order {index + 1}</h3> {/* Changed text color for visibility */}
+                                <p className="text-black">Total Quantity: {order.totalQuantity}</p> {/* Changed text color for visibility */}
+                                <p className="text-black">Total Price: Rs. {order.totalPrice}</p> {/* Changed text color for visibility */}
+                                <h4 className="font-semibold text-black">Items:</h4> {/* Changed text color for visibility */}
                                 {order.items.map((item, idx) => (
-                                    <p key={idx} className="text-gray-300">
+                                    <p key={idx} className="text-black">
                                         {item.name} (Quantity: {item.quantity})
                                     </p>
                                 ))}

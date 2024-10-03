@@ -32,16 +32,7 @@ function OrderFooter() {
 
         if (type === "takeaway") {
             alert(`Takeaway order confirmed! Total Price: Rs. ${totalPrice}`);
-            dispatch(orderActions.removeOrder()); // Clear the order
-        } else if (type === "delivery") {
-            const newDeliveryOrder = {
-                items: orderList.map(order => ({ name: order.name, quantity: order.quantity })),
-                totalPrice,
-                status: "Pending",
-                driver: null,
-            };
-            dispatch(orderActions.addDeliveryOrder(newDeliveryOrder)); // Add to Redux state
-            alert(`Delivery order confirmed! Status: Pending. Total Price: Rs. ${totalPrice}`);
+            dispatch(orderActions.removeOrder());
         }
     };
 
@@ -64,12 +55,6 @@ function OrderFooter() {
                             className="block w-full p-2 mb-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                         >
                             Takeaway
-                        </button>
-                        <button 
-                            onClick={() => handleOrderTypeSelection("delivery")}
-                            className="block w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                        >
-                            Delivery
                         </button>
                         <button 
                             onClick={() => setShowDialog(false)} 
