@@ -1,20 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCategories } from '../store/categorySlice';
 
 function CreateProduct() {
     const nameRef = useRef();
     const categoryRef = useRef();
     const priceRef = useRef();
     const imageRef = useRef();
-    const [categories, setCategories] = useState([]);
+    const categories = useSelector(store => store.categories);
+    const dispatch = useDispatch();
 
-    // Fetch categories to populate the category dropdown
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const response = await axios.get('http://localhost:8000/api/categories');
-                setCategories(response.data);
+                dispatch(setCategories(response.data));
             } catch (error) {
                 console.error('Error fetching categories:', error);
                 toast.error('Error fetching categories.');
@@ -55,8 +57,8 @@ function CreateProduct() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <div className="bg-white shadow-lg rounded-lg p-6 w-96">
+        <div className="flex items-center justify-center min-h-screen bg-[rgb(255,206,146)]">
+            <div className="bg-[rgb(207,156,90)] shadow-lg rounded-lg p-6 w-96">
                 <h2 className="text-xl font-bold mb-4">Create Product</h2>
                 <form onSubmit={handleSubmit}>
                     <input

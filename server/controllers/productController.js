@@ -44,10 +44,10 @@ const getProductById = async (req, res) => {
 // Update a product by ID
 const updateProduct = async (req, res) => {
     try {
-        const { name, category, price, stock } = req.body;
+        const { name, category, price } = req.body;
         const product = await Product.findByIdAndUpdate(
             req.params.id,
-            { name, category, price, stock },
+            { name, category, price  },
             { new: true } // Return the updated product
         );
         if (!product) {
@@ -61,11 +61,23 @@ const updateProduct = async (req, res) => {
 
 // Delete a product by ID
 const deleteProduct = async (req, res) => {
+    const { id } = req.params;
+
     try {
-        const product = await Product.findByIdAndDelete(req.params.id);
+        // First, find the product to delete
+        const product = await Product.findById(id);
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
+
+        // Remove the product from any category it belongs to
+        await Category.findByIdAndUpdate(
+            product.category, // The category ID from the product
+            { $pull: { products: id } } // Remove product ID from the products array
+        );
+
+        // Then delete the product
+        await Product.findByIdAndDelete(id);
         res.status(200).json({ message: 'Product deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Error deleting product', error });

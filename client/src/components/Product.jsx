@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { orderActions } from "../store/orderSlice";
 import toast from "react-hot-toast";
 
-function Product({ name, price, image }) {
+function Product({ name, price, image, onDelete }) {
     const dispatch = useDispatch();
     const quantityRef = useRef();
     const conPrice = price;
@@ -23,9 +23,9 @@ function Product({ name, price, image }) {
     };
 
     return (
-        <div className="w-full max-w-sm border border-gray-800 rounded-lg shadow bg-[rgb(124,99,67)]">
+        <div className="py-5 relative max-w-sm border border-gray-800 rounded-lg shadow bg-[rgb(124,99,67)]">
             <img
-                className="p-8 rounded-t-lg object-cover w-full h-80"
+                className="p-8 rounded-t-lg object-cover w-full h-64"
                 src={image}
                 alt="product image"
             />
@@ -44,6 +44,10 @@ function Product({ name, price, image }) {
                     >
                         Add to Order
                     </button>
+
+                    <button onClick={onDelete} className="absolute top-0 right-0 transform translate-x-1 -translate-y-1 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 focus:outline-none">
+        -
+      </button>
 
                     <input
                         type="number"

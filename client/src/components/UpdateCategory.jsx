@@ -1,17 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCategories } from '../store/categorySlice';
 
 const UpdateCategory = () => {
     const oldTitleRef = useRef();
     const newTitleRef = useRef();
-    const [categories, setCategories] = useState([]);
+    const categories = useSelector(store => store.categories);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const response = await axios.get('http://localhost:8000/api/categories');
-                setCategories(response.data);
+                dispatch(setCategories(response.data));
             } catch (error) {
                 console.error('Error fetching categories:', error);
                 toast.error('Error fetching categories.');
@@ -41,7 +44,7 @@ const UpdateCategory = () => {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-[rgb(255,206,146)]">
-            <div className="bg-white shadow-lg rounded-lg p-6 w-96">
+            <div className="bg-[rgb(207,156,90)] shadow-lg rounded-lg p-6 w-96">
                 <h2 className="text-xl font-bold mb-4">Update Category</h2>
                 <form onSubmit={handleUpdate}>
                     <select 

@@ -1,25 +1,37 @@
-// src/pages/MenuPage.js
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-import { setCategories } from '../store/categorySlice';
-import Product from "../components/Product";
+import { setCategories, removeProductFromCategory } from '../store/categorySlice';
+import axios from "axios";
+import Product from '../components/Product';
+import { useEffect } from 'react';
 
-function MenuPage() {
+const MenuPage = () => {
     const dispatch = useDispatch();
-    const categories = useSelector((store) => store.categories);
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/api/categories/with-products');
-                dispatch(setCategories(response.data)); // 
-            } catch (error) {
-                console.error("Error fetching categories:", error);
-            }
-        };
+    const categories = useSelector(store => store.categories);
 
-        fetchCategories();
-    }, [dispatch]);
+    const deleteProductHandler = (productId, categoryId) => {
+        dispatch(removeProductFromCategory({ productId, categoryId }));
+
+        axios.delete(`http://localhost:8000/api/products/${productId}`)
+            .then(response => {
+                console.log("Product deleted:", response.data);
+            })
+            .catch(error => {
+                console.error("Error deleting product:", error);
+            });
+    };
+
+    useEffect(() => {
+      const fetchCategories = async () => {
+          try {
+              const response = await axios.get('http://localhost:8000/api/categories/with-products');
+              dispatch(setCategories(response.data));
+          } catch (error) {
+              console.error("Error fetching categories:", error);
+          }
+      };
+
+      fetchCategories();
+  }, [dispatch]); 
 
     return (
         <div className="flex flex-col items-center py-8 h-100 bg-[rgb(255,206,146)]">
@@ -34,6 +46,7 @@ function MenuPage() {
                                     name={product.name}
                                     price={product.price}
                                     image={product.image}
+                                    onDelete={() => deleteProductHandler(product._id, category._id)} // Pass delete handler
                                 />
                             ))}
                         </div>
@@ -44,6 +57,6 @@ function MenuPage() {
             )}
         </div>
     );
-}
+};
 
 export default MenuPage;
