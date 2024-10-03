@@ -61,13 +61,14 @@ function PendingDeliveryOrders() {
                             <p><strong>Order ID:</strong> {order._id}</p>
                             <p><strong>Products:</strong></p>
                             <ul className="list-disc ml-4">
-                                {order.products.map((item) => (
-                                    <li key={item.product}>
+                                {order.products.map((item, index) => (
+                                    <li key={index+1}>
                                         {item.product.name} - Quantity: {item.quantity}
                                     </li>
                                 ))}
                             </ul>
-                            <p><strong>Total Amount:</strong> ${order.totalAmount}</p>
+                            <p><strong>Total Amount:</strong> Rs. {order.totalAmount}</p>
+                            <p><strong>Rider:</strong> {order?.rider?.name}</p>
                         </div>
                         <div className="flex space-x-4">
                             <button

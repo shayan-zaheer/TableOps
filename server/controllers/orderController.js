@@ -262,7 +262,7 @@ const deleteOrder = async (req, res) => {
 // Fetch all delivery orders that are pending
 const getPendingDeliveryOrders = async (req, res) => {
     try {
-        const pendingOrders = await Order.find({ status: 'In Progress', type: 'delivery' }).populate('products.product', 'name');;
+        const pendingOrders = await Order.find({ status: 'In Progress', type: 'delivery' }).populate('products.product', 'name').populate("rider");
         res.status(200).json(pendingOrders);
 
         console.log(pendingOrders);
