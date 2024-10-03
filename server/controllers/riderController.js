@@ -14,7 +14,7 @@ const addRider = async (req, res) => {
 // Get all drivers
 const getAllRiders = async (req, res) => {
     try {
-        const riders = await Rider.find({});
+        const riders = await Rider.find();
         res.status(200).send(riders);
     } catch (error) {
         res.status(500).send(error);

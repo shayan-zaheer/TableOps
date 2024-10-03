@@ -24,13 +24,9 @@ const orderSchema = new mongoose.Schema({
         enum: ['takeaway', 'delivery'],
         required: true,
     },
-    driver: {
+    rider: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Driver',
-    },
-    deliveryAddress: {
-        type: String,
-        required: function() { return this.type === 'delivery'; }, // Required only for delivery
+        ref: 'Rider',
     },
     status: {
         type: String,

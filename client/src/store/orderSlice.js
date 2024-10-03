@@ -2,24 +2,34 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const orderSlice = createSlice({
     name: "order",
-    initialState: [],
+    initialState: {
+        orders: [],
+        deliveryOrders: [],
+    },
     reducers: {
         addItem: (state, action) => {
             const { name, price, quantity } = action.payload;
-            const duplicateIndex = state.findIndex(item => item.name === name);
+            const duplicateIndex = state.orders.findIndex(item => item.name === name);
 
             if (duplicateIndex !== -1) {
-                state[duplicateIndex].quantity += quantity;
+                state.orders[duplicateIndex].quantity += quantity;
             } else {
-                state.push(action.payload);
+                state.orders.push(action.payload);
             }
         },
         removeItem: (state, action) => {
-            return state.filter(item => item.name !== action.payload);
+            return state.orders.filter(item => item.name !== action.payload);
         },
         removeOrder: (state, action) => {
-            return [];
-        }
+            state.orders = [];
+        },
+        addDeliveryOrder(state, action) {
+            state.deliveryOrders.push(action.payload);
+        },
+        updateDeliveryOrders(state, action) {
+            const updatedDeliveryOrders = action.payload;
+            state.deliveryOrders = updatedDeliveryOrders;
+        },
     }
 });
 

@@ -1,22 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { auditActions } from "../store/auditSlice";
+import { auditActions } from "../store/auditSlice"; // Assuming you have an audit slice
 import { orderActions } from "../store/orderSlice";
 
 function OrderFooter() {
     const dispatch = useDispatch();
-    const orderList = useSelector(store => store.order);
-    
+    const orderList = useSelector(store => store.order.orders);
     const [showDialog, setShowDialog] = useState(false);
-    const [orderType, setOrderType] = useState(null); // To store takeaway or delivery
-
-    const totalPrice = (orderList && orderList.length > 0) 
-        ? orderList.reduce((total, order) => total + order.price * order.quantity, 0) 
-        : 0;
+    const [orderType, setOrderType] = useState(null);
+    const totalPrice = orderList.reduce((total, order) => total + order.price * order.quantity, 0);
 
     const handleConfirmOrder = () => {
         if (totalPrice > 0) {
-            setShowDialog(true); // Show dialog for order type selection
+            setShowDialog(true);
         } else {
             alert("No items in the order.");
         }
@@ -24,32 +20,28 @@ function OrderFooter() {
 
     const handleOrderTypeSelection = (type) => {
         setOrderType(type);
-        setShowDialog(false); // Close dialog
+        setShowDialog(false);
+
+        const auditLogEntry = {
+            totalQuantity: orderList.reduce((total, order) => total + order.quantity, 0),
+            totalPrice,
+            items: orderList.map(order => ({ name: order.name, quantity: order.quantity }))
+        };
+
+        dispatch(auditActions.addAuditLog(auditLogEntry));
 
         if (type === "takeaway") {
-            // Handle takeaway order logic
-            const auditLogEntry = {
-                totalQuantity: orderList.reduce((total, order) => total + order.quantity, 0),
-                totalPrice: totalPrice,
-                items: orderList.map(order => ({ name: order.name, quantity: order.quantity }))
-            };
-    
-            dispatch(auditActions.addAuditLog(auditLogEntry));
             alert(`Takeaway order confirmed! Total Price: Rs. ${totalPrice}`);
             dispatch(orderActions.removeOrder()); // Clear the order
         } else if (type === "delivery") {
-            // Handle delivery order logic
-            const deliveryOrderEntry = {
+            const newDeliveryOrder = {
                 items: orderList.map(order => ({ name: order.name, quantity: order.quantity })),
-                totalPrice: totalPrice,
+                totalPrice,
                 status: "Pending",
                 driver: null,
             };
-
-            dispatch(orderActions.addDeliveryOrder(deliveryOrderEntry)); // Adjust this as per your slice
-
+            dispatch(orderActions.addDeliveryOrder(newDeliveryOrder)); // Add to Redux state
             alert(`Delivery order confirmed! Status: Pending. Total Price: Rs. ${totalPrice}`);
-            dispatch(orderActions.removeOrder());
         }
     };
 
