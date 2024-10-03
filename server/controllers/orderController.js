@@ -166,6 +166,27 @@ const createOrder = async (req, res) => {
     }
 };
 
+const updateOrderStatus = async (req, res) => {
+    const { status } = req.body;
+
+    try {
+        const order = await Order.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true } // Return the updated order
+        );
+
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        res.status(200).json(order);
+    } catch (error) {
+        console.error('Error updating order status:', error);
+        res.status(500).json({ message: error.message || 'Error updating order status' });
+    }
+};
+
 const assignRiderToOrder = async (req, res) => {
     try {
         const { orderId } = req.params; // Get orderId from the request parameters
@@ -216,36 +237,7 @@ const getOrderById = async (req, res) => {
     }
 };
 
-const updateOrder = async (req, res) => {
-    try {
-        const { products } = req.body;
 
-        let totalAmount = 0;
-        const orderProducts = await Promise.all(
-            products.map(async (item) => {
-                const product = await Product.findById(item.product);
-                if (!product) {
-                    throw new Error(`Product not found: ${item.product}`);
-                }
-                totalAmount += product.price * item.quantity;
-                return { product: product._id, quantity: item.quantity };
-            })
-        );
-
-        const order = await Order.findByIdAndUpdate(
-            req.params.id,
-            { products: orderProducts, totalAmount },
-            { new: true }
-        );
-
-        if (!order) {
-            return res.status(404).json({ message: 'Order not found' });
-        }
-        res.status(200).json({ message: 'Order updated successfully', order });
-    } catch (error) {
-        res.status(500).json({ message: 'Error updating order', error: error.message });
-    }
-};
 
 const deleteOrder = async (req, res) => {
     try {
@@ -272,12 +264,11 @@ const getPendingDeliveryOrders = async (req, res) => {
     }
 };
 
-
 module.exports = {
     createOrder,
     getOrders,
     getOrderById,
-    updateOrder,
+    updateOrderStatus,
     getPendingDeliveryOrders,
     deleteOrder,
     assignRiderToOrder
