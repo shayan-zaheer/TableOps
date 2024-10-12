@@ -223,40 +223,53 @@ const getOrders = async (req, res) => {
 };
 
 const addItemsToOrder = async (req, res) => {
-    const { id } = req.params; // Extract orderId from URL
+    const { orderId } = req.params; // Extract orderId from URL
     const { newItems } = req.body;   // Extract newItems from request body
 
-    console.log(orderId, newItems);
-
     try {
-        // Find the order by ID
-        const order = await Order.findById(orderId);
+        // Find the order by ID and populate product details
+        const order = await Order.findById(orderId).populate('products.product');
+
+        console.log("NEW ORDER:", order);
+
         if (!order) {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        // Add new items to the order
-        newItems.forEach(item => {
+        // Create an array of promises for adding new items
+        const itemPromises = newItems.map(async (item) => {
             const existingProduct = order.products.find(
-                product => product.product.toString() === item.product
+                product => product.product._id.toString() === item.product // Compare product IDs as strings
             );
 
             if (existingProduct) {
-                // If the product already exists, update the quantity
                 existingProduct.quantity += item.quantity;
             } else {
-                // If it's a new product, push it to the products array
+                const newProduct = await Product.findById(item.product);
+
+                // Check if the product exists
+                if (!newProduct) {
+                    throw new Error(`Product with ID ${item.product} not found`); // Throw an error to catch later
+                }
+
+                // Push the new product with its details into the products array
                 order.products.push({
-                    product: item.product,
+                    product: newProduct._id, // Store the product ID
                     quantity: item.quantity,
                 });
             }
         });
 
-        // Recalculate the total amount (assuming a `calculateTotal` method is available)
+        // Wait for all promises to complete
+        await Promise.all(itemPromises);
+
+        // Recalculate the total amount
         order.totalAmount = order.products.reduce((total, product) => {
             const productPrice = product.product.price; // Assuming each product has a price field
-            return total + (productPrice * product.quantity);
+            if (productPrice != null && !isNaN(productPrice)) { // Check if productPrice is a valid number
+                return total + (productPrice * product.quantity);
+            }
+            return total; // If price is invalid, return total unchanged
         }, 0);
 
         // Save the updated order
@@ -266,9 +279,10 @@ const addItemsToOrder = async (req, res) => {
         return res.status(200).json(order);
     } catch (error) {
         console.error('Error updating order:', error);
-        return res.status(500).json({ message: 'Error updating order', error });
+        return res.status(500).json({ message: 'Error updating order', error: error.message });
     }
 };
+
 
 const getDineInOrder = async (req, res) => {
     try {
@@ -294,7 +308,6 @@ const getOrderById = async (req, res) => {
         res.status(500).json({ message: 'Error fetching order', error });
     }
 };
-
 
 
 const deleteOrder = async (req, res) => {
