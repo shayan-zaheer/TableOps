@@ -222,6 +222,16 @@ const getOrders = async (req, res) => {
     }
 };
 
+const getDineInOrder = async (req, res) => {
+    try {
+        const dineInOrders = await Order.find({ type: 'dinein', status: 'Pending' }).populate('products.product');
+        return res.status(200).json(dineInOrders);
+    } catch (error) {
+        console.error('Error fetching dine-in orders:', error);
+        return res.status(500).json({ message: 'Error fetching dine-in orders' });
+    }
+};
+
 const getOrderById = async (req, res) => {
     try {
         const order = await Order.findById(req.params.id).populate({
@@ -271,5 +281,6 @@ module.exports = {
     updateOrderStatus,
     getPendingDeliveryOrders,
     deleteOrder,
-    assignRiderToOrder
+    assignRiderToOrder,
+    getDineInOrder
 };
