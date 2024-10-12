@@ -222,6 +222,54 @@ const getOrders = async (req, res) => {
     }
 };
 
+const addItemsToOrder = async (req, res) => {
+    const { id } = req.params; // Extract orderId from URL
+    const { newItems } = req.body;   // Extract newItems from request body
+
+    console.log(orderId, newItems);
+
+    try {
+        // Find the order by ID
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        // Add new items to the order
+        newItems.forEach(item => {
+            const existingProduct = order.products.find(
+                product => product.product.toString() === item.product
+            );
+
+            if (existingProduct) {
+                // If the product already exists, update the quantity
+                existingProduct.quantity += item.quantity;
+            } else {
+                // If it's a new product, push it to the products array
+                order.products.push({
+                    product: item.product,
+                    quantity: item.quantity,
+                });
+            }
+        });
+
+        // Recalculate the total amount (assuming a `calculateTotal` method is available)
+        order.totalAmount = order.products.reduce((total, product) => {
+            const productPrice = product.product.price; // Assuming each product has a price field
+            return total + (productPrice * product.quantity);
+        }, 0);
+
+        // Save the updated order
+        await order.save();
+
+        // Return the updated order
+        return res.status(200).json(order);
+    } catch (error) {
+        console.error('Error updating order:', error);
+        return res.status(500).json({ message: 'Error updating order', error });
+    }
+};
+
 const getDineInOrder = async (req, res) => {
     try {
         const dineInOrders = await Order.find({ type: 'dinein', status: 'Pending' }).populate('products.product');
@@ -282,5 +330,6 @@ module.exports = {
     getPendingDeliveryOrders,
     deleteOrder,
     assignRiderToOrder,
-    getDineInOrder
+    getDineInOrder,
+    addItemsToOrder
 };

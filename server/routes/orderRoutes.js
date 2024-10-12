@@ -9,11 +9,13 @@ const {
     assignRiderToOrder,
     getPendingDeliveryOrders,
     updateOrderStatus,
-    getDineInOrder
+    getDineInOrder,
+    addItemsToOrder
 } = require('../controllers/orderController');
 
 // Routes
-router.get('/pending-dinein', getDineInOrder)
+router.get('/pending-dinein', getDineInOrder);
+router.put('/:id/add-items', addItemsToOrder);
 router.get('/pendingdelivery', getPendingDeliveryOrders);
 router.post('/', createOrder); // Create a new order
 router.get('/', getOrders); // Get all orders
