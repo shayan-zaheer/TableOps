@@ -45,9 +45,9 @@ function Product({ name, price, image, onDelete }) {
                         Add to Order
                     </button>
 
-                    <button onClick={onDelete} className="absolute top-0 right-0 transform translate-x-1 -translate-y-1 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 focus:outline-none">
+                    {/* <button onClick={onDelete} className="absolute top-0 right-0 transform translate-x-1 -translate-y-1 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 focus:outline-none">
         -
-      </button>
+      </button> */}
 
                     <input
                         type="number"
