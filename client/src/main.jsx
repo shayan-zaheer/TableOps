@@ -12,6 +12,7 @@ import store from './store/index.js'
 import CategoriesPage from './pages/CategoriesPage.jsx'
 import ProductsPage from './pages/ProductsPage.jsx'
 import RidersPage from './pages/RidersPage.jsx'
+import DineInOrders from './pages/DineInPage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "/riders",
         element: <RidersPage />
+      },
+      {
+        path: "/dinein",
+        element: <DineInOrders />
       }
     ]
   },
