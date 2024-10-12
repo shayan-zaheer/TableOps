@@ -46,7 +46,7 @@ const MenuPage = () => {
                                     name={product.name}
                                     price={product.price}
                                     image={product.image}
-                                    onDelete={() => deleteProductHandler(product._id, category._id)} // Pass delete handler
+                                    onDelete={() => deleteProductHandler(product._id, category._id)}
                                 />
                             ))}
                         </div>

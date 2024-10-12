@@ -1,13 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { auditActions } from "../store/auditSlice"; // Assuming you have an audit slice
+import { auditActions } from "../store/auditSlice";
 import { orderActions } from "../store/orderSlice";
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 function OrderFooter() {
     const dispatch = useDispatch();
     const orderList = useSelector(store => store.order.orders);
     const [showDialog, setShowDialog] = useState(false);
-    const [orderType, setOrderType] = useState(null);
     const totalPrice = orderList.reduce((total, order) => total + order.price * order.quantity, 0);
 
     const handleConfirmOrder = () => {
@@ -18,8 +19,7 @@ function OrderFooter() {
         }
     };
 
-    const handleOrderTypeSelection = (type) => {
-        setOrderType(type);
+    const handleOrderTypeSelection = async (type) => {
         setShowDialog(false);
 
         const auditLogEntry = {
@@ -28,11 +28,33 @@ function OrderFooter() {
             items: orderList.map(order => ({ name: order.name, quantity: order.quantity }))
         };
 
+        // Dispatch audit log entry
         dispatch(auditActions.addAuditLog(auditLogEntry));
 
-        if (type === "takeaway") {
-            alert(`Takeaway order confirmed! Total Price: Rs. ${totalPrice}`);
-            dispatch(orderActions.removeOrder());
+        try {
+            if (type === "takeaway") {
+                // For takeaway, simply log the order and update state
+                toast.success(`Takeaway order confirmed! Total Price: Rs. ${totalPrice}`);
+                dispatch(orderActions.removeOrder());
+
+            } else if (type === "dinein") {
+                // For dine-in, make an API call to create the order
+                const response = await axios.post('http://localhost:8000/api/orders', {
+                    products: orderList,
+                    totalAmount: totalPrice,
+                    type: 'dinein'    
+                });
+
+                console.log(response);
+
+                if (response.status === 201) {
+                    toast.success(`Dine-in order created successfully! Total Price: Rs. ${totalPrice}. You can add items later.`);
+                    dispatch(orderActions.removeOrder());
+                }
+            }
+        } catch (error) {
+            console.error(`Error confirming ${type} order:`, error);
+            toast.error(`Error confirming ${type} order`);
         }
     };
 
@@ -55,6 +77,12 @@ function OrderFooter() {
                             className="block w-full p-2 mb-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                         >
                             Takeaway
+                        </button>
+                        <button 
+                            onClick={() => handleOrderTypeSelection("dinein")}
+                            className="block w-full p-2 mb-2 bg-green-500 text-white rounded hover:bg-green-600"
+                        >
+                            Dine-In
                         </button>
                         <button 
                             onClick={() => setShowDialog(false)} 

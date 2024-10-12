@@ -152,7 +152,7 @@ const createOrder = async (req, res) => {
             products: transformedProducts,
             totalAmount, // Now it reflects the calculated total
             type,
-            status: type === "delivery" ? "Pending" : "Completed"
+            status: (type === "delivery" || type === "dinein") ? "Pending" : "Delivered"
         });
 
         console.log("NEW ORDER:", totalAmount);

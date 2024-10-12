@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { orderActions } from '../store/orderSlice';
 import toast from 'react-hot-toast';
 
 function RiderSelection({ orderDetails, onRiderAssigned }) {
     const [riders, setRiders] = useState([]);
+    const dispatch = useDispatch();
     const [selectedRider, setSelectedRider] = useState("");
 
     useEffect(() => {
@@ -31,7 +34,8 @@ function RiderSelection({ orderDetails, onRiderAssigned }) {
                 riderId: selectedRider
             });
             toast.success('Rider assigned successfully!');
-            onRiderAssigned(selectedRider); // Notify parent component
+            onRiderAssigned(selectedRider);
+            dispatch(orderActions.removeOrder());
         } catch (error) {
             console.error('Error assigning rider:', error);
             toast.error('Error assigning rider.');
