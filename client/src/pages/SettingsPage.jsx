@@ -1,7 +1,10 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
+import axios from "axios";
+import { auditActions } from "../store/auditSlice";
 
 function AuditLog() {
+    const dispatch = useDispatch();
     const logs = useSelector((store) => store.audit.audit);
     
     const [isOpen, setIsOpen] = useState(false);
@@ -10,8 +13,22 @@ function AuditLog() {
     const [selectedMonth, setSelectedMonth] = useState("");
     const [selectedDay, setSelectedDay] = useState("");
 
-    console.log("DB LOGS:", logs);
-    console.log(filteredLogs);
+    useEffect(() => {
+        const getLogs = async() => {
+            try{
+                const result = await axios.get("http://localhost:8000/api/audit");
+                dispatch(auditActions.initialAddAudits(result?.data?.data));
+            }
+            catch(err){
+                console.error(err);
+            }
+        }
+
+        getLogs();
+    }, []);
+
+    // console.log("DB LOGS:", logs);
+    console.log("FILTERED:", filteredLogs);
 
     const toggleCollapse = () => {
         setIsOpen((prev) => !prev);

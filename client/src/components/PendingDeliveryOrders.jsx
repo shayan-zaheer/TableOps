@@ -14,14 +14,11 @@ function PendingDeliveryOrders() {
         const fetchPendingOrders = async () => {
             try {
                 const response = await axios.get('http://localhost:8000/api/orders/pendingdelivery');
-
-                console.log(response);
-
                 setPendingOrders(response.data);
-                setLoading(false);
             } catch (error) {
                 console.error('Error fetching pending delivery orders:', error);
                 toast.error('Error fetching pending delivery orders');
+            } finally {
                 setLoading(false);
             }
         };
@@ -31,24 +28,24 @@ function PendingDeliveryOrders() {
 
     const handleStatusChange = async (orderId, newStatus) => {
         try {
+            // Find the order to update
             const orderToUpdate = pendingOrders.find(order => order._id === orderId);
-    
             if (!orderToUpdate) {
                 throw new Error('Order not found');
             }
-    
+
             // Update the order status
             await axios.put(`http://localhost:8000/api/orders/${orderId}/update-status`, { status: newStatus });
-    
+
+            // Calculate total quantity and total price
             const totalQuantity = orderToUpdate.products.reduce((total, item) => total + item.quantity, 0);
-
-            console.log(orderToUpdate);
-
             const totalPrice = orderToUpdate.totalAmount;
-    
+
+            // Log the audit entry for the status change
             const auditLogEntry = {
-                orderId: orderId,
-                totalQuantity: totalQuantity,
+                orderId,
+                action: `Order ${orderId} status changed to ${newStatus}`,
+                totalQuantity,
                 totalPrice,
                 items: orderToUpdate.products.map(item => ({
                     name: item.product.name,
@@ -56,18 +53,19 @@ function PendingDeliveryOrders() {
                 })),
                 createdAt: Date.now(),
             };
-    
-            console.log(auditLogEntry);
 
+            // Log the audit entry in the backend
+            await axios.post('http://localhost:8000/api/audit', auditLogEntry);
             dispatch(auditActions.addAuditLog(auditLogEntry));
-    
-            toast.success('Order status updated successfully');
 
-            setPendingOrders((prevOrders) =>
-                prevOrders.filter((order) => order._id !== orderId)
-            );
+            toast.success(`Order status updated to ${newStatus}`);
 
+            // Remove the order from the pending list after status change
+            setPendingOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));
+
+            // Dispatch order removal action
             dispatch(orderActions.removeOrder());
+
         } catch (error) {
             console.error('Error updating order status:', error);
             toast.error('Error updating order status');
@@ -93,13 +91,13 @@ function PendingDeliveryOrders() {
                             <p><strong>Products:</strong></p>
                             <ul className="list-disc ml-4">
                                 {order.products.map((item, index) => (
-                                    <li key={index+1}>
+                                    <li key={index}>
                                         {item.product.name} - Quantity: {item.quantity}
                                     </li>
                                 ))}
                             </ul>
                             <p><strong>Total Amount:</strong> Rs. {order.totalAmount}</p>
-                            <p><strong>Rider:</strong> {order?.rider?.name}</p>
+                            <p><strong>Rider:</strong> {order?.rider?.name || 'Not assigned'}</p>
                         </div>
                         <div className="flex space-x-4">
                             <button

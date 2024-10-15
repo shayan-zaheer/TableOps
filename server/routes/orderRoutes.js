@@ -17,11 +17,11 @@ const {
 router.get('/pending-dinein', getDineInOrder);
 router.put('/:orderId/add-items', addItemsToOrder);
 router.get('/pendingdelivery', getPendingDeliveryOrders);
-router.post('/', createOrder); // Create a new order
-router.get('/', getOrders); // Get all orders
+router.post('/', createOrder); 
+router.get('/', getOrders);
 router.get('/:id', getOrderById);
 router.put("/:orderId/assign-rider", assignRiderToOrder)
 router.put('/:id/update-status', updateOrderStatus);
-router.delete('/:id', deleteOrder); // Delete order by ID
+router.delete('/:id', deleteOrder);
 
 module.exports = router;

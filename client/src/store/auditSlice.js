@@ -11,6 +11,12 @@ const auditSlice = createSlice({
         },
         clearAuditLogs: (state) => {
             state.audit = [];
+        },
+        getAuditLogs: (state, action) => {
+            return state.audit;
+        },
+        initialAddAudits: (state, action) => {
+            state.audit = action.payload;
         }
     }
 });
