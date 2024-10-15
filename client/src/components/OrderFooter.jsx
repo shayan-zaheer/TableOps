@@ -25,10 +25,10 @@ function OrderFooter() {
         const auditLogEntry = {
             totalQuantity: orderList.reduce((total, order) => total + order.quantity, 0),
             totalPrice,
-            items: orderList.map(order => ({ name: order.name, quantity: order.quantity }))
+            items: orderList.map(order => ({ name: order.name, quantity: order.quantity })),
+            createdAt: Date.now(),
         };
 
-        // Dispatch audit log entry
         dispatch(auditActions.addAuditLog(auditLogEntry));
 
         try {

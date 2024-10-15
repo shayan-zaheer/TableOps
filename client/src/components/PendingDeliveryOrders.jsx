@@ -54,6 +54,7 @@ function PendingDeliveryOrders() {
                     name: item.product.name,
                     quantity: item.quantity,
                 })),
+                createdAt: Date.now(),
             };
     
             console.log(auditLogEntry);
