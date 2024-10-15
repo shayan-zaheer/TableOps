@@ -15,19 +15,18 @@ function AuditLog() {
 
     useEffect(() => {
         const getLogs = async() => {
-            try{
+            try {
                 const result = await axios.get("http://localhost:8000/api/audit");
                 dispatch(auditActions.initialAddAudits(result?.data?.data));
-            }
-            catch(err){
+            } catch(err) {
                 console.error(err);
             }
         }
 
         getLogs();
-    }, []);
+    }, [dispatch]);
 
-    // console.log("DB LOGS:", logs);
+    console.log("DB LOGS:", logs);
     console.log("FILTERED:", filteredLogs);
 
     const toggleCollapse = () => {
@@ -39,21 +38,21 @@ function AuditLog() {
 
         if (selectedYear) {
             filtered = filtered.filter((order) => {
-                const orderDate = new Date(order.createdAt);
+                const orderDate = new Date(order.order.createdAt); // Accessing createdAt from order
                 return orderDate.getFullYear() === parseInt(selectedYear);
             });
         }
 
         if (selectedMonth) {
             filtered = filtered.filter((order) => {
-                const orderDate = new Date(order.createdAt);
+                const orderDate = new Date(order.order.createdAt); // Accessing createdAt from order
                 return orderDate.getMonth() === parseInt(selectedMonth) - 1;
             });
         }
 
         if (selectedDay) {
             filtered = filtered.filter((order) => {
-                const orderDate = new Date(order.createdAt);
+                const orderDate = new Date(order.order.createdAt); // Accessing createdAt from order
                 return orderDate.getDate() === parseInt(selectedDay);
             });
         }
@@ -131,27 +130,19 @@ function AuditLog() {
                     {filteredLogs.length === 0 ? (
                         <p className="text-gray-900">No audit logs available for this period.</p>
                     ) : (
-                        // filteredLogs && console.log(filteredLogs)
-                        filteredLogs != undefined && filteredLogs.map((order, index) => (
-
+                        filteredLogs.map((order, index) => (
                             <div
-                                key={index}
+                                key={order._id} // Use unique ID for key
                                 className="px-4 py-4 overflow-hidden bg-[rgb(255,206,146)] mb-2 rounded"
                             >
                                 <h3 className="font-bold text-black">Order {index + 1}</h3>
-                                <p className="text-black">Total Quantity: {order.totalQuantity}</p>
-                                <p className="text-black">Total Price: Rs. {order.totalPrice}</p>
+                                <p className="text-black">Total Amount: Rs. {order.order.totalAmount}</p> {/* Displaying total amount */}
                                 <h4 className="font-semibold text-black">Items:</h4>
-                                {/* {order?.order?.products.map((item, idx) => (
-                                    <p key={idx} className="text-black">
-                                        {item?.name} (Quantity: {item?.quantity})
-                                    </p>
-                                ))} */}
                                 {order.order.products.map((item, idx) => (
-            <p key={idx} className="text-black">
-                {item.product.name} (Quantity: {item.quantity}) {/* Accessing the populated product name */}
-            </p>
-        ))}
+                                    <p key={idx} className="text-black">
+                                        {item.product.name} (Quantity: {item.quantity})
+                                    </p>
+                                ))}
                             </div>
                         ))
                     )}

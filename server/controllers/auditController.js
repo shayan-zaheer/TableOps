@@ -6,7 +6,6 @@ const getAuditLogs = async (req, res) => {
     try {
         const { year, month, day } = req.query;
 
-        // Build the date filter object
         let dateFilter = {};
 
         if (year || month || day) {
@@ -32,7 +31,13 @@ const getAuditLogs = async (req, res) => {
         }
 
         const auditLogs = await AuditLog.find(dateFilter)
-            .populate('order') // Populate the order details
+            .populate({
+                path: 'order', // Populate the order details
+                populate: { 
+                    path: 'products.product', // Populate the products within the order
+                    model: 'Product' // Ensure this matches your Product model name
+                }
+            })
             .sort({ createdAt: -1 }); // Sorting by most recent
 
         res.status(200).json({
@@ -49,49 +54,13 @@ const getAuditLogs = async (req, res) => {
     }
 };
 
-// const addAuditLog = async (req, res) => {
-//     try {
-//         const { orderId, action } = req.body;
-
-//         const order = await Order.findById(orderId).populate("products.product");
-//         if (!order) {
-//             return res.status(404).json({
-//                 success: false,
-//                 message: "Order not found",
-//             });
-//         }
-
-//         const newAuditLog = new AuditLog({
-//             order: orderId,
-//             action, // Action description
-//             createdAt: Date.now(), // Current date and time
-//         });
-
-//         await newAuditLog.save();
-
-//         res.status(201).json({
-//             success: true,
-//             message: "Audit log created for order",
-//             data: newAuditLog,
-//         });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({
-//             success: false,
-//             message: "Server error",
-//         });
-//     }
-// };
-
 const addAuditLog = async (req, res) => {
     try {
         const { orderId, action } = req.body;
-
-        // Find the order and populate the products array with product details
         const order = await Order.findById(orderId).populate({
-            path: 'products.product', // Ensure this path is set to your Product model
-            model: 'Product' // Ensure this is the correct name of your Product model
-        });
+            path: "products.product",
+            model: "Product"
+        })
 
         if (!order) {
             return res.status(404).json({
@@ -116,6 +85,7 @@ const addAuditLog = async (req, res) => {
                 order // Return the populated order with product details
             },
         });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({
