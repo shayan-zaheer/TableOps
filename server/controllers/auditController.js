@@ -1,5 +1,6 @@
 const AuditLog = require("../models/audit");
 const Order = require("../models/order");
+const Product = require("../models/product");
 
 const getAuditLogs = async (req, res) => {
     try {
@@ -30,7 +31,6 @@ const getAuditLogs = async (req, res) => {
             }
         }
 
-        // Fetch audit logs based on the constructed filter
         const auditLogs = await AuditLog.find(dateFilter)
             .populate('order') // Populate the order details
             .sort({ createdAt: -1 }); // Sorting by most recent
@@ -49,40 +49,50 @@ const getAuditLogs = async (req, res) => {
     }
 };
 
+// const addAuditLog = async (req, res) => {
+//     try {
+//         const { orderId, action } = req.body;
+
+//         const order = await Order.findById(orderId).populate("products.product");
+//         if (!order) {
+//             return res.status(404).json({
+//                 success: false,
+//                 message: "Order not found",
+//             });
+//         }
+
+//         const newAuditLog = new AuditLog({
+//             order: orderId,
+//             action, // Action description
+//             createdAt: Date.now(), // Current date and time
+//         });
+
+//         await newAuditLog.save();
+
+//         res.status(201).json({
+//             success: true,
+//             message: "Audit log created for order",
+//             data: newAuditLog,
+//         });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({
+//             success: false,
+//             message: "Server error",
+//         });
+//     }
+// };
+
 const addAuditLog = async (req, res) => {
     try {
-        const { orderId, action, auditLogEntry } = req.body;
+        const { orderId, action } = req.body;
 
-        // Handle takeaway orders
-        if (action === "Takeaway Order Confirmed") {
-            // Create an order for takeaway
-            const newOrder = new Order({
-                items: auditLogEntry.items,
-                totalAmount: auditLogEntry.totalPrice,
-                type: 'takeaway',
-                createdAt: Date.now(), // Current date and time
-            });
+        // Find the order and populate the products array with product details
+        const order = await Order.findById(orderId).populate({
+            path: 'products.product', // Ensure this path is set to your Product model
+            model: 'Product' // Ensure this is the correct name of your Product model
+        });
 
-            await newOrder.save();
-
-            // Create audit log entry with the orderId of the new order
-            const newAuditLog = new AuditLog({
-                order: newOrder._id, // Associate the new takeaway order
-                action, // Action description
-                createdAt: Date.now(), // Current date and time
-            });
-
-            await newAuditLog.save();
-
-            return res.status(201).json({
-                success: true,
-                message: "Audit log created for takeaway order",
-                data: newAuditLog,
-            });
-        }
-
-        // For dine-in orders, we fetch the order using orderId
-        const order = await Order.findById(orderId);
         if (!order) {
             return res.status(404).json({
                 success: false,
@@ -100,8 +110,11 @@ const addAuditLog = async (req, res) => {
 
         res.status(201).json({
             success: true,
-            message: "Audit log created for dine-in order",
-            data: newAuditLog,
+            message: "Audit log created for order",
+            data: {
+                auditLog: newAuditLog,
+                order // Return the populated order with product details
+            },
         });
     } catch (error) {
         console.error(error);
@@ -111,6 +124,7 @@ const addAuditLog = async (req, res) => {
         });
     }
 };
+
 
 
 module.exports = {

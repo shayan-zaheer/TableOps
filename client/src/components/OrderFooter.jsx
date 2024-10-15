@@ -3,13 +3,15 @@ import { useState } from "react";
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { orderActions } from "../store/orderSlice";
-// import { auditActions } from "../store/auditSlice";
+import { auditActions } from "../store/auditSlice";
 
 function OrderFooter() {
     const dispatch = useDispatch();
     const orderList = useSelector(store => store.order.orders);
     const [showDialog, setShowDialog] = useState(false);
     const totalPrice = orderList.reduce((total, order) => total + order.price * order.quantity, 0);
+
+    console.log("ORDER:",orderList)
 
     const handleConfirmOrder = () => {
         if (totalPrice > 0) {
@@ -38,15 +40,16 @@ function OrderFooter() {
                     totalAmount: totalPrice,
                     type: 'takeaway',
                 });
+
+                console.log(response.data);
     
                 if (response.status === 201) {
-                    const orderId = response.data._id; // Get the orderId from the response
+                    const orderId = response.data._id;
     
-                    // Log audit entry with the created orderId
                     await axios.post('http://localhost:8000/api/audit/', {
                         action: "Takeaway Order Confirmed",
                         auditLogEntry,
-                        orderId, // Pass the newly created orderId
+                        orderId
                     });
     
                     toast.success(`Takeaway order confirmed! Total Price: Rs. ${totalPrice}`);
@@ -72,6 +75,8 @@ function OrderFooter() {
                     toast.success(`Dine-in order created successfully! Total Price: Rs. ${totalPrice}. You can add items later.`);
                     dispatch(orderActions.removeOrder()); // Clear orders on success
                 }
+
+                // dispatch(orderActions.removeOrder());
             }
         } catch (error) {
             console.error(`Error confirming ${type} order:`, error);

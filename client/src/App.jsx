@@ -9,7 +9,7 @@ function App() {
             <Header />
             <div className="flex-1">
             <Toaster
-                position="top-right" // You can change the 
+                position="bottom-right" // You can change the 
                 toastOptions={{
                     style: {
                         background: '#333', // Dark background

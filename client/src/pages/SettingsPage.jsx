@@ -131,7 +131,9 @@ function AuditLog() {
                     {filteredLogs.length === 0 ? (
                         <p className="text-gray-900">No audit logs available for this period.</p>
                     ) : (
-                        filteredLogs.map((order, index) => (
+                        // filteredLogs && console.log(filteredLogs)
+                        filteredLogs != undefined && filteredLogs.map((order, index) => (
+
                             <div
                                 key={index}
                                 className="px-4 py-4 overflow-hidden bg-[rgb(255,206,146)] mb-2 rounded"
@@ -140,11 +142,16 @@ function AuditLog() {
                                 <p className="text-black">Total Quantity: {order.totalQuantity}</p>
                                 <p className="text-black">Total Price: Rs. {order.totalPrice}</p>
                                 <h4 className="font-semibold text-black">Items:</h4>
-                                {order.items.map((item, idx) => (
+                                {/* {order?.order?.products.map((item, idx) => (
                                     <p key={idx} className="text-black">
-                                        {item.name} (Quantity: {item.quantity})
+                                        {item?.name} (Quantity: {item?.quantity})
                                     </p>
-                                ))}
+                                ))} */}
+                                {order.order.products.map((item, idx) => (
+            <p key={idx} className="text-black">
+                {item.product.name} (Quantity: {item.quantity}) {/* Accessing the populated product name */}
+            </p>
+        ))}
                             </div>
                         ))
                     )}
