@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { auditActions } from "../store/auditSlice";
 
-function AuditLog() {
+function AuditPage() {
     const dispatch = useDispatch();
     const logs = useSelector((store) => store.audit.audit);
     
@@ -132,10 +132,11 @@ function AuditLog() {
                     ) : (
                         filteredLogs.map((order, index) => (
                             <div
-                                key={order._id} // Use unique ID for key
+                                key={order.order._id} // Use unique ID for key
                                 className="px-4 py-4 overflow-hidden bg-[rgb(255,206,146)] mb-2 rounded"
                             >
-                                <h3 className="font-bold text-black">Order {index + 1}</h3>
+                                <p className="float-right font-normal text-black">{new Date(order.createdAt).toLocaleTimeString()}</p>
+                                <h3 className="font-bold text-black">Order {order.order._id}</h3>
                                 <p className="text-black">Total Amount: Rs. {order.order.totalAmount}</p> {/* Displaying total amount */}
                                 <h4 className="font-semibold text-black">Items:</h4>
                                 {order.order.products.map((item, idx) => (
@@ -152,4 +153,4 @@ function AuditLog() {
     );
 }
 
-export default AuditLog;
+export default AuditPage;

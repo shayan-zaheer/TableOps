@@ -41,11 +41,13 @@ function OrderFooter() {
                     type: 'takeaway',
                 });
 
-                console.log(response.data);
+                console.log(response);
     
                 if (response.status === 201) {
                     const orderId = response.data._id;
     
+                    console.log(orderId);
+
                     await axios.post('http://localhost:8000/api/audit/', {
                         action: "Takeaway Order Confirmed",
                         auditLogEntry,
