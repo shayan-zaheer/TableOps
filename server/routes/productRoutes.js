@@ -11,9 +11,9 @@ const {
 
 // Routes
 router.post('/', upload.single("image"), createProduct);
-router.get('/', getProducts); // Get all products
-router.get('/:id', getProductById); // Get product by ID
-router.put('/:id', updateProduct); // Update product by ID
-router.delete('/:id', deleteProduct); // Delete product by ID
+router.get('/', getProducts);
+router.get('/:id', getProductById);
+router.put('/:id', updateProduct);
+router.delete('/:id', deleteProduct);
 
 module.exports = router;
