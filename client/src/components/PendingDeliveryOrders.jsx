@@ -106,12 +106,6 @@ function PendingDeliveryOrders() {
                             >
                                 Mark as Completed
                             </button>
-                            <button
-                                className="bg-yellow-500 text-white px-4 py-2 rounded"
-                                onClick={() => handleStatusChange(order._id, 'In Progress')}
-                            >
-                                Mark as In Progress
-                            </button>
                         </div>
                     </li>
                 ))}

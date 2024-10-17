@@ -3,7 +3,6 @@ import { useState } from "react";
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { orderActions } from "../store/orderSlice";
-import { auditActions } from "../store/auditSlice";
 
 function OrderFooter() {
     const dispatch = useDispatch();
@@ -23,8 +22,7 @@ function OrderFooter() {
 
     const handleOrderTypeSelection = async (type) => {
         setShowDialog(false);
-    
-        // Initialize auditLogEntry
+
         const auditLogEntry = {
             totalQuantity: orderList.reduce((total, order) => total + order.quantity, 0),
             totalPrice,
@@ -57,29 +55,7 @@ function OrderFooter() {
                     toast.success(`Takeaway order confirmed! Total Price: Rs. ${totalPrice}`);
                     dispatch(orderActions.removeOrder()); // Clear orders on success
                 }
-            } else if (type === "dinein") {
-                // Handle dine-in order as before
-                const response = await axios.post('http://localhost:8000/api/orders/', {
-                    products: orderList,
-                    totalAmount: totalPrice,
-                    type: 'dinein',
-                });
-    
-                if (response.status === 201) {
-                    const orderId = response.data._id; // Get orderId from response
-    
-                    await axios.post('http://localhost:8000/api/audit/', {
-                        action: "Dine-in Order Created",
-                        orderId,
-                        auditLogEntry, // Add orderId to audit log
-                    });
-    
-                    toast.success(`Dine-in order created successfully! Total Price: Rs. ${totalPrice}. You can add items later.`);
-                    dispatch(orderActions.removeOrder()); // Clear orders on success
-                }
-
-                // dispatch(orderActions.removeOrder());
-            }
+            } 
         } catch (error) {
             console.error(`Error confirming ${type} order:`, error);
             toast.error(`Error confirming ${type} order: ${error.response ? error.response.data.message : error.message}`);
@@ -92,11 +68,10 @@ function OrderFooter() {
             <div className="flex justify-between items-center mt-4 p-3 bg-[rgb(109,94,76)] text-white rounded">
                 <span className="font-semibold">Total Price: Rs. {totalPrice}</span>
                 <button onClick={handleConfirmOrder} className="text-green-500 hover:text-green-700 font-semibold">
-                    Confirm Order
+                    Confirm Order(Takeaway)
                 </button>
             </div>
 
-            {/* Confirmation Dialog */}
             {showDialog && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-4 rounded shadow-lg">
@@ -106,18 +81,6 @@ function OrderFooter() {
                             className="block w-full p-2 mb-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                         >
                             Takeaway
-                        </button>
-                        <button
-                            onClick={() => handleOrderTypeSelection("dinein")}
-                            className="block w-full p-2 mb-2 bg-green-500 text-white rounded hover:bg-green-600"
-                        >
-                            Dine-In
-                        </button>
-                        <button
-                            onClick={() => setShowDialog(false)}
-                            className="block w-full p-2 mt-2 bg-gray-300 text-black rounded hover:bg-gray-400"
-                        >
-                            Cancel
                         </button>
                     </div>
                 </div>

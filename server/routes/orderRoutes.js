@@ -10,7 +10,8 @@ const {
     getPendingDeliveryOrders,
     updateOrderStatus,
     getDineInOrder,
-    addItemsToOrder
+    addItemsToOrder,
+    assignWaiterToOrder
 } = require('../controllers/orderController');
 
 // Routes
@@ -21,6 +22,7 @@ router.post('/', createOrder);
 router.get('/', getOrders);
 router.get('/:id', getOrderById);
 router.put("/:orderId/assign-rider", assignRiderToOrder)
+router.put("/:orderId/assign-waiter", assignWaiterToOrder)
 router.put('/:id/update-status', updateOrderStatus);
 router.delete('/:id', deleteOrder);
 

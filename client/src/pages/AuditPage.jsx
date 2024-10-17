@@ -14,45 +14,129 @@ function AuditPage() {
     const [selectedDay, setSelectedDay] = useState("");
 
     useEffect(() => {
-        const getLogs = async() => {
+        const getLogs = async () => {
             try {
                 const result = await axios.get("http://localhost:8000/api/audit");
                 dispatch(auditActions.initialAddAudits(result?.data?.data));
             } catch(err) {
                 console.error(err);
             }
-        }
+        };
 
         getLogs();
     }, [dispatch]);
-
-    console.log("DB LOGS:", logs);
-    console.log("FILTERED:", filteredLogs);
 
     const toggleCollapse = () => {
         setIsOpen((prev) => !prev);
     };
 
+    const printReceipts = (orderId) => {
+        const categoriesMap = {};
+        
+        // Step 1: Find the specific audit based on the orderId
+        const selectedAudit = filteredLogs.find(audit => audit.order._id === orderId);
+        
+        if (!selectedAudit) {
+            console.error("No audit found for the given order ID.");
+            return; // Exit if no matching audit is found
+        }
+        
+        const products = selectedAudit.order.products; // Get products for the selected order
+        
+        products.forEach(item => {
+            const productCategory = item.product.category.title; // Get the category title
+    
+            // Initialize the category in the map if it doesn't exist
+            if (!categoriesMap[productCategory]) {
+                categoriesMap[productCategory] = {
+                    category: productCategory,
+                    items: [],
+                    totalAmount: 0
+                };
+            }
+    
+            // Add item to the category
+            categoriesMap[productCategory].items.push(item);
+            categoriesMap[productCategory].totalAmount += item.product.price * item.quantity; // Update total amount
+        });
+        
+        // Step 2: Prepare the HTML for printing
+        let printContent = `<h1>Order ID: ${orderId}</h1>`; // Add Order ID at the top
+    
+        // Include waiter information if order type is dinein
+        if (selectedAudit.order.type === "dinein") {
+            const waiterName = selectedAudit.order.waiter?.name || "N/A"; // Use "N/A" if no waiter is found
+            printContent += `<p>Waiter: ${waiterName}</p>`;
+        }
+    
+        Object.values(categoriesMap).forEach(categoryData => {
+            const { category, items, totalAmount } = categoryData;
+    
+            // Generate the HTML for the receipt
+            printContent += `
+                <div class="receipt">
+                    <h2>${category} Receipt</h2>
+                    <ul>
+                        ${items.map(item => `
+                            <li>
+                                ${item.product.name} (x${item.quantity}) - ${item.product.price * item.quantity} PKR
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <h3>Total: ${totalAmount} PKR</h3>
+                </div>
+                <hr />
+            `;
+        });
+        
+        // Step 3: Open print dialog with the generated content
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Print Receipts</title>
+                    <style>
+                        .receipt {
+                            font-family: Arial, sans-serif;
+                            margin-bottom: 20px;
+                        }
+                        h1, h2 {
+                            margin: 0;
+                        }
+                        h3 {
+                            margin: 10px 0;
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${printContent}
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    };
+   
     useEffect(() => {
         let filtered = logs;
 
         if (selectedYear) {
             filtered = filtered.filter((order) => {
-                const orderDate = new Date(order.order.createdAt); // Accessing createdAt from order
+                const orderDate = new Date(order.order.createdAt);
                 return orderDate.getFullYear() === parseInt(selectedYear);
             });
         }
 
         if (selectedMonth) {
             filtered = filtered.filter((order) => {
-                const orderDate = new Date(order.order.createdAt); // Accessing createdAt from order
+                const orderDate = new Date(order.order.createdAt);
                 return orderDate.getMonth() === parseInt(selectedMonth) - 1;
             });
         }
 
         if (selectedDay) {
             filtered = filtered.filter((order) => {
-                const orderDate = new Date(order.order.createdAt); // Accessing createdAt from order
+                const orderDate = new Date(order.order.createdAt);
                 return orderDate.getDate() === parseInt(selectedDay);
             });
         }
@@ -132,12 +216,28 @@ function AuditPage() {
                     ) : (
                         filteredLogs.map((order, index) => (
                             <div
-                                key={order.order._id} // Use unique ID for key
+                                key={order.order._id}
                                 className="px-4 py-4 overflow-hidden bg-[rgb(255,206,146)] mb-2 rounded"
                             >
                                 <p className="float-right font-normal text-black">{new Date(order.createdAt).toLocaleTimeString()}</p>
                                 <h3 className="font-bold text-black">Order {order.order._id}</h3>
-                                <p className="text-black">Total Amount: Rs. {order.order.totalAmount}</p> {/* Displaying total amount */}
+                                <p className="text-black">Total Amount: Rs. {order.order.totalAmount}</p>
+                                
+                                <button
+                                    onClick={() => printReceipts(order.order._id)}
+                                    className="mt-2 float-right bg-blue-500 text-white px-4 py-2 rounded"
+                                >
+                                    Print Receipts
+                                </button>   
+
+                                {order?.order?.type === "delivery" && (
+                                    <p className="text-black">Rider: <i>{order?.order?.rider?.name}</i></p>  
+                                )}
+
+                                {order?.order?.type === "dinein" && (
+                                    <p className="text-black">Waiter: {order?.order?.waiter?.name}</p>  
+                                )}
+                                
                                 <h4 className="font-semibold text-black">Items:</h4>
                                 {order.order.products.map((item, idx) => (
                                     <p key={idx} className="text-black">

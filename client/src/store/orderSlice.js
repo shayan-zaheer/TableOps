@@ -5,6 +5,7 @@ const orderSlice = createSlice({
     initialState: {
         orders: [],
         deliveryOrders: [],
+        dineInOrders: [],  // New state for dine-in orders
     },
     reducers: {
         addItem: (state, action) => {
@@ -27,9 +28,23 @@ const orderSlice = createSlice({
             state.deliveryOrders.push(action.payload);
         },
         updateDeliveryOrders(state, action) {
-            const updatedDeliveryOrders = action.payload;
-            state.deliveryOrders = updatedDeliveryOrders;
+            const updatedOrder = action.payload;
+            const index = state.deliveryOrders.findIndex(order => order._id === updatedOrder._id);
+            if (index !== -1) {
+                state.deliveryOrders[index] = updatedOrder;
+            }
         },
+        // Reducers for dine-in orders
+        addDineInOrder(state, action) {
+            state.dineInOrders.push(action.payload);
+        },
+        updateDineInOrders(state, action) {
+            const updatedOrder = action.payload;
+            const index = state.dineInOrders.findIndex(order => order._id === updatedOrder._id);
+            if (index !== -1) {
+                state.dineInOrders[index] = updatedOrder;
+            }
+        }
     }
 });
 

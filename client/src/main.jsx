@@ -5,7 +5,6 @@ import { Provider } from 'react-redux'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import MenuPage from './pages/MenuPage.jsx'
-import DealsPage from './pages/DealsPage.jsx'
 import AuditPage from './pages/AuditPage.jsx'
 import OrderPage from "./pages/OrderPage.jsx"
 import store from './store/index.js'
@@ -14,6 +13,7 @@ import ProductsPage from './pages/ProductsPage.jsx'
 import RidersPage from './pages/RidersPage.jsx'
 import DeliveryPage from './pages/DeliveryPage.jsx'
 import DineInPage from './pages/DineInPage.jsx'
+import WaitersPage from './pages/WaitersPage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -22,10 +22,6 @@ const router = createBrowserRouter([
       {
         path: "/menu",
         element: <MenuPage />
-      },
-      {
-        path: "/deals",
-        element: <DealsPage />
       },
       {
         path: "/order",
@@ -54,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: "/riders",
         element: <RidersPage />
+      },
+      {
+        path: "/waiters",
+        element: <WaitersPage />
       }
     ]
   },

@@ -28,6 +28,10 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Rider',
     },
+    waiter: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Waiter'
+    },
     status: {
         type: String,
         enum: ['Pending', 'Delivered', 'Cancelled'],

@@ -31,12 +31,6 @@ function Header() {
                     </li>
                 </Link>
 
-                <Link to="/deals">
-                    <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/deals" ? "bg-[rgb(129,86,29)]  text-white" : "hover:bg-[rgb(126,101,69)] hover:text-white text-black"}`}>
-                        Deals
-                    </li>
-                </Link>
-
                 <Link to="/order">
                     <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/order" ? "bg-[rgb(129,86,29)]  text-white" : "hover:bg-[rgb(126,101,69)] hover:text-white text-black"}`}>
                         Orders

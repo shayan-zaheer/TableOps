@@ -18,6 +18,7 @@ const generateInvoicePDF = async (id, category, items, categoryTotal, invoicePat
         const fontSize = 12;
         let y = 750;
 
+        // Invoice heading
         page.drawText(`Invoice #${id}`, {
             x: 50,
             y: y,
@@ -26,6 +27,7 @@ const generateInvoicePDF = async (id, category, items, categoryTotal, invoicePat
             color: rgb(0, 0, 0),
         });
 
+        // Add Date
         y -= 40;
         const currentDate = new Date().toLocaleString('en-US', {
             year: 'numeric', 
@@ -39,10 +41,12 @@ const generateInvoicePDF = async (id, category, items, categoryTotal, invoicePat
         
         page.drawText(`Date: ${currentDate}`, { x: 50, y, size: fontSize, font: timesRomanFont });
         y -= 20;
+
+        // Add Category
         page.drawText(`Category: ${category}`, { x: 50, y, size: fontSize, font: timesRomanFont });
 
         // Add table headers
-        y -= 40;
+        y -= 20;
         page.drawText('Product Name', { x: 50, y, size: fontSize, font: timesRomanFont });
         page.drawText('Quantity', { x: 200, y, size: fontSize, font: timesRomanFont });
         page.drawText('Price', { x: 300, y, size: fontSize, font: timesRomanFont });
@@ -58,9 +62,11 @@ const generateInvoicePDF = async (id, category, items, categoryTotal, invoicePat
             y -= 20;
         });
 
+        // Total amount
         y -= 30;
         page.drawText(`Total Amount: ${categoryTotal.toFixed(2)} PKR`, { x: 50, y, size: 16, font: timesRomanFont });
 
+        // Save the PDF
         const pdfBytes = await pdfDoc.save();
         fs.writeFileSync(invoicePath, pdfBytes);
 
@@ -70,6 +76,7 @@ const generateInvoicePDF = async (id, category, items, categoryTotal, invoicePat
         return { success: false, error: err.message };
     }
 };
+
 
 const createOrder = async (req, res) => {
     try {
@@ -109,32 +116,31 @@ const createOrder = async (req, res) => {
             status: (type === "delivery" || type === "dinein") ? "Pending" : "Delivered"
         });
 
-        console.log("NEW", newOrder);
+            // const productsByCategory = transformedProducts.reduce((acc, item) => {
+            //     if (!acc[item.category]) {
+            //         acc[item.category] = [];
+            //     }
+            //     acc[item.category].push(item);
+            //     return acc;
+            // }, {});
+    
+            // // Create an array to hold paths of generated PDFs
+            // const pdfPaths = [];
+    
+            // // Generate PDFs for each category
+            // for (const category of Object.keys(productsByCategory)) {
+            //     const categoryItems = productsByCategory[category];
+            //     const categoryTotal = categoryItems.reduce((total, item) => total + item.price * item.quantity, 0); // Calculate category total
+    
+            //     const invoicePath = path.join(__dirname, `./invoice-${category}-${Date.now()}.pdf`);
+            //     await generateInvoicePDF(newOrder?._id, category, categoryItems, categoryTotal, invoicePath); // Pass category total to PDF generation
+            //     pdfPaths.push(invoicePath);
+            // }
+    
+            // Save the new order to the database
+            newOrder.totalAmount = transformedProducts.reduce((total, item) => total + item.price * item.quantity, 0); // Update totalAmount for the order   
 
         // Group products by category for receipt printing
-        const productsByCategory = transformedProducts.reduce((acc, item) => {
-            if (!acc[item.category]) {
-                acc[item.category] = [];
-            }
-            acc[item.category].push(item);
-            return acc;
-        }, {});
-
-        // Create an array to hold paths of generated PDFs
-        const pdfPaths = [];
-
-        // Generate PDFs for each category
-        for (const category of Object.keys(productsByCategory)) {
-            const categoryItems = productsByCategory[category];
-            const categoryTotal = categoryItems.reduce((total, item) => total + item.price * item.quantity, 0); // Calculate category total
-
-            const invoicePath = path.join(__dirname, `./invoice-${category}-${Date.now()}.pdf`);
-            await generateInvoicePDF(newOrder._id, category, categoryItems, categoryTotal, invoicePath); // Pass category total to PDF generation
-            pdfPaths.push(invoicePath);
-        }
-
-        // Save the new order to the database
-        newOrder.totalAmount = transformedProducts.reduce((total, item) => total + item.price * item.quantity, 0); // Update totalAmount for the order
         await newOrder.save();
 
         // Send a 201 response to the frontend without downloading any PDFs
@@ -174,8 +180,8 @@ const assignRiderToOrder = async (req, res) => {
 
         const updatedOrder = await Order.findByIdAndUpdate(
             orderId,
-            { rider: riderId, status: 'In Progress' }, // Update assigned rider and status
-            { new: true } // Return the updated document
+            { rider: riderId, status: 'In Progress' }, 
+            { new: true }
         );
 
         if (!updatedOrder) {
@@ -186,6 +192,28 @@ const assignRiderToOrder = async (req, res) => {
     } catch (error) {
         console.error('Error assigning rider to order:', error);
         res.status(500).json({ message: 'Error assigning rider to order' });
+    }
+};
+
+const assignWaiterToOrder = async (req, res) => {
+    try {
+        const { orderId } = req.params; // Get orderId from the request parameters
+        const { waiterId } = req.body; // Get riderId from the request body
+
+        const updatedOrder = await Order.findByIdAndUpdate(
+            orderId,
+            { waiter: waiterId, status: 'Pending' }, // Update assigned rider and status
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedOrder) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        res.json(updatedOrder);
+    } catch (error) {
+        console.error('Error assigning rider to order:', error);
+        res.status(500).json({ message: 'Error assigning waiter to order' });
     }
 };
 
@@ -201,54 +229,6 @@ const getOrders = async (req, res) => {
         res.status(500).json({ message: 'Error fetching orders', error });
     }
 };
-
-// const addItemsToOrder = async (req, res) => {
-//     const { orderId } = req.params;
-//     const { newItems } = req.body;
-
-//     try {
-//         const order = await Order.findById(orderId).populate('products.product');
-
-//         if (!order) {
-//             return res.status(404).json({ message: 'Order not found' });
-//         }
-
-//         newItems.forEach(async (item) => {
-//             const existingProduct = order.products.find(
-//                 product => product.product._id.toString() === item.product);
-
-//             if (existingProduct) {
-//                 existingProduct.quantity += item.quantity;
-//             } else {
-//                 const newProduct = await Product.findById(item.product);
-
-//                 if (!newProduct) {
-//                     throw new Error(`Product with ID ${item.product} not found`);
-//                 }
-
-//                 order.products.push({
-//                     product: newProduct._id,
-//                     quantity: item.quantity,
-//                 });
-//             }
-//         });
-
-//         order.totalAmount = order.products.reduce((total, product) => {
-//             const productPrice = product.product.price;
-//             if (productPrice != null && !isNaN(productPrice)) {
-//                 return total + (productPrice * product.quantity);
-//             }
-//             return total;
-//         }, 0);
-
-//         await order.save();
-
-//         return res.status(200).json(order);
-//     } catch (error) {
-//         console.error('Error updating order:', error);
-//         return res.status(500).json({ message: 'Error updating order', error: error.message });
-//     }
-// };
 
 const addItemsToOrder = async (req, res) => {
     const { orderId } = req.params; // Extract orderId from URL
@@ -321,11 +301,10 @@ const addItemsToOrder = async (req, res) => {
     }
 };
 
-
 const getDineInOrder = async (req, res) => {
     try {
         const dineInOrders = await Order.find({ type: 'dinein', status: 'Pending' })
-    .populate('products.product', 'name price');
+    .populate('products.product', 'name price').populate("waiter");
 
         return res.status(200).json(dineInOrders);
     } catch (error) {
@@ -384,5 +363,6 @@ module.exports = {
     deleteOrder,
     assignRiderToOrder,
     getDineInOrder,
-    addItemsToOrder
+    addItemsToOrder,
+    assignWaiterToOrder
 };
