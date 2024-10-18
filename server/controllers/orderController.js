@@ -1,8 +1,6 @@
 const Order = require('../models/order');
 const Product = require('../models/product');
 const AuditLog = require("../models/audit");
-const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
-const fs = require('fs');
 
 const createOrder = async (req, res) => {
     try {

@@ -29,20 +29,114 @@ function AuditPage() {
     const toggleCollapse = () => {
         setIsOpen((prev) => !prev);
     };
-
+   
+    // const printReceipts = (orderId) => {
+    //     const categoriesMap = {};
+    
+    //     // Step 1: Find the specific audit based on the orderId
+    //     const selectedAudit = filteredLogs.find(audit => audit.order._id === orderId);
+    
+    //     if (!selectedAudit) {
+    //         console.error("No audit found for the given order ID.");
+    //         return; // Exit if no matching audit is found
+    //     }
+    
+    //     const products = selectedAudit.order.products; // Get products for the selected order
+    
+    //     products.forEach(item => {
+    //         const productCategory = item.product.category.title; // Get the category title
+    
+    //         // Initialize the category in the map if it doesn't exist
+    //         if (!categoriesMap[productCategory]) {
+    //             categoriesMap[productCategory] = {
+    //                 category: productCategory,
+    //                 items: [],
+    //                 totalAmount: 0
+    //             };
+    //         }
+    
+    //         // Add item to the category
+    //         categoriesMap[productCategory].items.push(item);
+    //         categoriesMap[productCategory].totalAmount += item.product.price * item.quantity; // Update total amount
+    //     });
+    
+    //     // Step 2: Prepare the HTML for printing
+    //     let printContent = `
+    //         <div style="display: flex; align-items: center;">
+    //             <img src="./images/logo.png" alt="Logo" style="height: 50px; margin-right: 10px;" />
+    //             <h1>Order ID: ${orderId}</h1>
+    //         </div>`; // Add logo image and Order ID at the top
+    
+    //     // Include waiter information if order type is dinein
+    //     if (selectedAudit.order.type === "dinein") {
+    //         const waiterName = selectedAudit.order.waiter?.name || "N/A"; // Use "N/A" if no waiter is found
+    //         printContent += `<p>Waiter: ${waiterName}</p>`;
+    //     }
+    
+    //     Object.values(categoriesMap).forEach(categoryData => {
+    //         const { category, items, totalAmount } = categoryData;
+    
+    //         // Generate the HTML for the receipt
+    //         printContent += `
+    //             <div class="receipt">
+    //                 <h2>${category} Receipt (Order ID: ${orderId})</h2> <!-- Order ID in each category -->
+    //                 <ul>
+    //                     ${items.map(item => `
+    //                         <li>
+    //                             ${item.product.name} (x${item.quantity}) - ${item.product.price * item.quantity} PKR
+    //                         </li>
+    //                     `).join('')}
+    //                 </ul>
+    //                 <h3>Total: ${totalAmount} PKR</h3>
+    //             </div>
+    //             <hr />
+    //         `;
+    //     });
+    
+    //     // Step 3: Open print dialog with the generated content
+    //     const printWindow = window.open('', '_blank');
+    //     printWindow.document.write(`
+    //         <html>
+    //             <head>
+    //                 <title>Print Receipts</title>
+    //                 <style>
+    //                     .receipt {
+    //                         font-family: Arial, sans-serif;
+    //                         margin-bottom: 20px;
+    //                     }
+    //                     h1, h2 {
+    //                         margin: 0;
+    //                     }
+    //                     h3 {
+    //                         margin: 10px 0;
+    //                     }
+    //                     img {
+    //                         max-height: 50px;
+    //                     }
+    //                 </style>
+    //             </head>
+    //             <body>
+    //                 ${printContent}
+    //             </body>
+    //         </html>
+    //     `);
+    //     printWindow.document.close();
+    //     printWindow.print();
+    // };
+    
     const printReceipts = (orderId) => {
         const categoriesMap = {};
-        
+    
         // Step 1: Find the specific audit based on the orderId
         const selectedAudit = filteredLogs.find(audit => audit.order._id === orderId);
-        
+    
         if (!selectedAudit) {
             console.error("No audit found for the given order ID.");
             return; // Exit if no matching audit is found
         }
-        
+    
         const products = selectedAudit.order.products; // Get products for the selected order
-        
+    
         products.forEach(item => {
             const productCategory = item.product.category.title; // Get the category title
     
@@ -59,9 +153,13 @@ function AuditPage() {
             categoriesMap[productCategory].items.push(item);
             categoriesMap[productCategory].totalAmount += item.product.price * item.quantity; // Update total amount
         });
-        
+    
         // Step 2: Prepare the HTML for printing
-        let printContent = `<h1>Order ID: ${orderId}</h1>`; // Add Order ID at the top
+        let printContent = `
+            <div style="display: flex; align-items: center;">
+                <img src="/images/logo.png" alt="Logo" style="height: 50px; margin-right: 10px;" />
+                <h1>Order ID: ${orderId}</h1>
+            </div>`; // Add logo image and Order ID at the top
     
         // Include waiter information if order type is dinein
         if (selectedAudit.order.type === "dinein") {
@@ -72,10 +170,10 @@ function AuditPage() {
         Object.values(categoriesMap).forEach(categoryData => {
             const { category, items, totalAmount } = categoryData;
     
-            // Generate the HTML for the receipt
+            // Generate the HTML for the receipt with dotted line for "tearable" section
             printContent += `
                 <div class="receipt">
-                    <h2>${category} Receipt</h2>
+                    <h2>${category} Receipt (Order ID: ${orderId})</h2> <!-- Order ID in each category -->
                     <ul>
                         ${items.map(item => `
                             <li>
@@ -85,10 +183,10 @@ function AuditPage() {
                     </ul>
                     <h3>Total: ${totalAmount} PKR</h3>
                 </div>
-                <hr />
+                <hr class="dotted-line" />
             `;
         });
-        
+    
         // Step 3: Open print dialog with the generated content
         const printWindow = window.open('', '_blank');
         printWindow.document.write(`
@@ -106,6 +204,15 @@ function AuditPage() {
                         h3 {
                             margin: 10px 0;
                         }
+                        img {
+                            max-height: 50px;
+                        }
+                        /* Add dotted lines between sections */
+                        .dotted-line {
+                            border: none;
+                            border-top: 2px dotted black;
+                            margin: 20px 0;
+                        }
                     </style>
                 </head>
                 <body>
@@ -116,7 +223,9 @@ function AuditPage() {
         printWindow.document.close();
         printWindow.print();
     };
-   
+    
+
+
     useEffect(() => {
         let filtered = logs;
 

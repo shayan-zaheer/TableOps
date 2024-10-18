@@ -28,20 +28,16 @@ function PendingDeliveryOrders() {
 
     const handleStatusChange = async (orderId, newStatus) => {
         try {
-            // Find the order to update
             const orderToUpdate = pendingOrders.find(order => order._id === orderId);
             if (!orderToUpdate) {
                 throw new Error('Order not found');
             }
 
-            // Update the order status
             await axios.put(`http://localhost:8000/api/orders/${orderId}/update-status`, { status: newStatus });
 
-            // Calculate total quantity and total price
             const totalQuantity = orderToUpdate.products.reduce((total, item) => total + item.quantity, 0);
             const totalPrice = orderToUpdate.totalAmount;
 
-            // Log the audit entry for the status change
             const auditLogEntry = {
                 orderId,
                 action: `Order ${orderId} status changed to ${newStatus}`,
@@ -54,21 +50,32 @@ function PendingDeliveryOrders() {
                 createdAt: Date.now(),
             };
 
-            // Log the audit entry in the backend
             await axios.post('http://localhost:8000/api/audit', auditLogEntry);
             dispatch(auditActions.addAuditLog(auditLogEntry));
 
             toast.success(`Order status updated to ${newStatus}`);
 
-            // Remove the order from the pending list after status change
             setPendingOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));
-
-            // Dispatch order removal action
             dispatch(orderActions.removeOrder());
 
         } catch (error) {
             console.error('Error updating order status:', error);
             toast.error('Error updating order status');
+        }
+    };
+
+    const handleDeleteOrder = async (orderId) => {
+        try {
+            // API call to delete the order
+            await axios.delete(`http://localhost:8000/api/orders/${orderId}`);
+
+            // Remove the order from the pending list
+            setPendingOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));
+
+            toast.success('Order deleted successfully');
+        } catch (error) {
+            console.error('Error deleting order:', error);
+            toast.error('Error deleting order');
         }
     };
 
@@ -105,6 +112,13 @@ function PendingDeliveryOrders() {
                                 onClick={() => handleStatusChange(order._id, 'Completed')}
                             >
                                 Mark as Completed
+                            </button>
+                            {/* Delete Button */}
+                            <button
+                                className="bg-red-500 text-white px-4 py-2 rounded"
+                                onClick={() => handleDeleteOrder(order._id)}
+                            >
+                                Delete Order
                             </button>
                         </div>
                     </li>
