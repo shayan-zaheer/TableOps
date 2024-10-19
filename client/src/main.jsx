@@ -14,6 +14,8 @@ import RidersPage from './pages/RidersPage.jsx'
 import DeliveryPage from './pages/DeliveryPage.jsx'
 import DineInPage from './pages/DineInPage.jsx'
 import WaitersPage from './pages/WaitersPage.jsx'
+import DealsPage from './pages/DealsPage.jsx'
+import DealManagePage from './pages/DealManagePage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -54,6 +56,14 @@ const router = createBrowserRouter([
       {
         path: "/waiters",
         element: <WaitersPage />
+      },
+      {
+        path: "/deals",
+        element: <DealsPage />
+      },
+      {
+        path: "/manage-deals",
+        element: <DealManagePage />
       }
     ]
   },
