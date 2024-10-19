@@ -14,18 +14,17 @@ function Deal({ name, price, image, dealItems }) {
     console.log("DEALITEMSSSSSSSSSSSS", dealItems);
 
     const handleAddDeal = () => {
-        const quantity = +quantityRef.current.value;
 
         // Add each item in the deal to the order
         dealItems.forEach(item => {
             dispatch(orderActions.addItem({
                 name: item.productId.name,
                 price: item.productId.price,
-                quantity, // Adding same quantity for each item in the deal
+                quantity: item.quantity, // Adding same quantity for each item in the deal
             }));
         });
 
-        toast.success(`${quantity}x ${name} (deal) added to order!`, {
+        toast.success(`${name} (deal) added to order!`, {
             duration: 3000,
         });
     };
@@ -43,7 +42,7 @@ function Deal({ name, price, image, dealItems }) {
                 </h5>
                 <div className="text-sm text-white">
                     {dealItems.map(item => (
-                        <p key={item.productId._id}>{item.productId.name} - Rs. {item.productId.price}</p>
+                        <p key={item.productId._id}>{item.quantity}x: {item.productId.name} - Rs. {item.productId.price}</p>
                     ))}
                 </div>
                 <div className="flex items-center justify-between mt-4">
@@ -58,14 +57,14 @@ function Deal({ name, price, image, dealItems }) {
                         Add Deal to Order
                     </button>
 
-                    <input
+                    {/* <input
                         type="number"
                         ref={quantityRef}
                         onChange={() => setPriceState(conPrice * quantityRef.current.value)}
                         min={1}
                         defaultValue={1}
                         className="appearance-none w-24 border border-gray-300 rounded-md py-1.5 px-4 text-center focus:outline-none focus:ring-4 focus:ring-blue-300"
-                    />
+                    /> */}
                 </div>
             </div>
         </div>
