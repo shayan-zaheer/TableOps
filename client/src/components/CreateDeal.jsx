@@ -70,7 +70,7 @@ function CreateDeal() {
             // Prepare the products data correctly as an array of ObjectId strings
             // Ensure selectedProducts contains valid ObjectId strings that exist in your Product collection
             const products = selectedProducts.map(productId => ({
-                productId: new mongoose.Types.ObjectId(productId),
+                productId: productId,
                 quantity: quantities[productId] // Ensure this value is a number
             }));            
     

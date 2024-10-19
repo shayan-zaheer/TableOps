@@ -1,10 +1,15 @@
 const Deal = require("../models/deal");
-// console.log("Deal model:", Deal);
 
 const getDeals = async (req, res) => {
     try {
-        const deals = await Deal.find().populate('products');
-        res.json(deals);
+        const deals = await Deal.find().populate({
+            path: 'products.productId', // Populate the productId within products
+            model: 'Product' // Reference to the Product model
+        });
+
+        console.log(deals);
+
+        res.status(200).json(deals);
     } catch (error) {
         console.error("Error fetching deals:", error);
         res.status(500).json({ error: "Failed to fetch deals." });
@@ -12,7 +17,6 @@ const getDeals = async (req, res) => {
 };
 
 const addDeal = async (req, res) => {
-    console.log("BODYYYYYYYYYYY", req.body);
     const { name, price, products } = req.body;
 
     try {

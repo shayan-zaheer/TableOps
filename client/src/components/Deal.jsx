@@ -3,11 +3,15 @@ import { useDispatch } from "react-redux";
 import { orderActions } from "../store/orderSlice";
 import toast from "react-hot-toast";
 
-function Deal({ name, price, image, dealItems, onDelete }) {
+function Deal({ name, price, image, dealItems }) {
+    console.log("DEALLLLL", dealItems); 
+
     const dispatch = useDispatch();
     const quantityRef = useRef();
     const conPrice = price;
     const [priceState, setPriceState] = useState(price);
+
+    console.log("DEALITEMSSSSSSSSSSSS", dealItems);
 
     const handleAddDeal = () => {
         const quantity = +quantityRef.current.value;
@@ -15,8 +19,8 @@ function Deal({ name, price, image, dealItems, onDelete }) {
         // Add each item in the deal to the order
         dealItems.forEach(item => {
             dispatch(orderActions.addItem({
-                name: item.name,
-                price: item.price,
+                name: item.productId.name,
+                price: item.productId.price,
                 quantity, // Adding same quantity for each item in the deal
             }));
         });
@@ -39,7 +43,7 @@ function Deal({ name, price, image, dealItems, onDelete }) {
                 </h5>
                 <div className="text-sm text-white">
                     {dealItems.map(item => (
-                        <p key={item._id}>{item.name} - Rs. {item.price}</p>
+                        <p key={item.productId._id}>{item.productId.name} - Rs. {item.productId.price}</p>
                     ))}
                 </div>
                 <div className="flex items-center justify-between mt-4">
