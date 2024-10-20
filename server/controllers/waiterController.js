@@ -1,6 +1,5 @@
-const Waiter = require('../models/waiter'); // Adjust the path as necessary
+const Waiter = require('../models/waiter');
 
-// Get all waiters
 const getAllWaiters = async (req, res) => {
     try {
         const waiters = await Waiter.find();
@@ -11,7 +10,6 @@ const getAllWaiters = async (req, res) => {
     }
 };
 
-// Add a new waiter
 const addWaiter = async (req, res) => {
     const { name, phone } = req.body;
 
@@ -29,7 +27,6 @@ const addWaiter = async (req, res) => {
     }
 };
 
-// Delete a waiter by ID
 const deleteWaiter = async (req, res) => {
     const { id } = req.params;
 

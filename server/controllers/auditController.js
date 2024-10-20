@@ -28,33 +28,33 @@ const getAuditLogs = async (req, res) => {
             }
 
             if (dateFilter.$expr.$and.length === 0) {
-                delete dateFilter.$expr; // Remove unnecessary $expr if no date filter is added
+                delete dateFilter.$expr;
             }
         }
 
         const auditLogs = await AuditLog.find(dateFilter)
             .populate({
-                path: 'order', // Populate the order details
+                path: 'order',
                 populate: [
                     {
-                        path: 'products.product', // Populate the products within the order
-                        model: 'Product', // Ensure this matches your Product model name
+                        path: 'products.product',
+                        model: 'Product',
                         populate: {
-                            path: 'category', // Populate the category within the product
-                            model: 'Category' // Ensure this matches your Category model name
+                            path: 'category',
+                            model: 'Category'
                         }
                     },
                     {
-                        path: 'rider', // Populate the rider for delivery orders
-                        model: 'Rider' // Ensure this matches your Rider model name
+                        path: 'rider',
+                        model: 'Rider'
                     },
                     {
-                        path: 'waiter', // Populate the waiter
-                        model: 'Waiter' // Ensure this matches your Waiter model name
+                        path: 'waiter',
+                        model: 'Waiter'
                     }
                 ]
             })
-            .sort({ createdAt: -1 }); // Sorting by most recent
+            .sort({ createdAt: -1 });
 
         res.status(200).json({
             success: true,
@@ -88,8 +88,8 @@ const addAuditLog = async (req, res) => {
 
         const newAuditLog = new AuditLog({
             order: orderId,
-            action, // Action description
-            createdAt: Date.now(), // Current date and time
+            action,
+            createdAt: Date.now(),
         });
 
         await newAuditLog.save();
@@ -99,7 +99,7 @@ const addAuditLog = async (req, res) => {
             message: "Audit log created for order",
             data: {
                 auditLog: newAuditLog,
-                order // Return the populated order with product details
+                order
             },
         });
 

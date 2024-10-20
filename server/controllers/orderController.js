@@ -6,13 +6,11 @@ const createOrder = async (req, res) => {
     try {
         const { products, type } = req.body;
 
-        // Validate the products array
         if (!products || !Array.isArray(products) || products.length === 0) {
             return res.status(400).json({ message: 'Products array is required and cannot be empty' });
         }
 
         const productPromises = products.map(async (item) => {
-            // Lookup each product by its name in the Product collection and populate category
             const foundProduct = await Product.findOne({ name: item.name }).populate('category');
 
             if (!foundProduct) {
@@ -28,13 +26,11 @@ const createOrder = async (req, res) => {
             };
         });
 
-        // Resolve all product lookups
         const transformedProducts = await Promise.all(productPromises);
 
-        // Create a new order instance
         const newOrder = new Order({
             products: transformedProducts,
-            totalAmount: 0, // Initialize total amount
+            totalAmount: 0,
             type,
             status: (type === "delivery" || type === "dinein") ? "Pending" : "Delivered"
         });
@@ -58,7 +54,7 @@ const updateOrderStatus = async (req, res) => {
         const order = await Order.findByIdAndUpdate(
             req.params.id,
             { status },
-            { new: true } // Return the updated order
+            { new: true }
         );
 
         if (!order) {
@@ -74,8 +70,8 @@ const updateOrderStatus = async (req, res) => {
 
 const assignRiderToOrder = async (req, res) => {
     try {
-        const { orderId } = req.params; // Get orderId from the request parameters
-        const { riderId } = req.body; // Get riderId from the request body
+        const { orderId } = req.params;
+        const { riderId } = req.body;
 
         const updatedOrder = await Order.findByIdAndUpdate(
             orderId,
@@ -96,13 +92,13 @@ const assignRiderToOrder = async (req, res) => {
 
 const assignWaiterToOrder = async (req, res) => {
     try {
-        const { orderId } = req.params; // Get orderId from the request parameters
-        const { waiterId } = req.body; // Get riderId from the request body
+        const { orderId } = req.params;
+        const { waiterId } = req.body;
 
         const updatedOrder = await Order.findByIdAndUpdate(
             orderId,
-            { waiter: waiterId, status: 'Pending' }, // Update assigned rider and status
-            { new: true } // Return the updated document
+            { waiter: waiterId, status: 'Pending' },
+            { new: true }
         );
 
         if (!updatedOrder) {
@@ -130,26 +126,23 @@ const getOrders = async (req, res) => {
 };
 
 const addItemsToOrder = async (req, res) => {
-    const { orderId } = req.params; // Extract orderId from URL
-    const { newItems } = req.body;  // Extract newItems from request body
+    const { orderId } = req.params;
+    const { newItems } = req.body;
 
     try {
-        // Find the order by ID and populate product details
         const order = await Order.findById(orderId).populate('products.product');
 
         if (!order) {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        // Iterate over new items
         for (const item of newItems) {
-            // Ensure item.product is valid
             if (!item.product || !item.quantity || item.quantity <= 0) {
                 return res.status(400).json({ message: 'Invalid product ID or quantity' });
             }
 
             const existingProduct = order.products.find(
-                product => product.product._id.toString() === item.product._id // Ensure product IDs match
+                product => product.product._id.toString() === item.product._id
             );
 
             if (existingProduct) {
@@ -161,8 +154,6 @@ const addItemsToOrder = async (req, res) => {
                     return res.status(404).json({ message: `Product with ID ${item.product} not found` });
                 }
 
-                console.log("NEWPRODUCT", newProduct);
-
                 order.products.push({
                     product: newProduct,
                     quantity: item.quantity,
@@ -170,28 +161,19 @@ const addItemsToOrder = async (req, res) => {
             }
         }
 
-        console.log("ORDERPRODUCTS:", order.products);
-
         order.totalAmount = order.products.reduce((total, product) => {
             const productPrice = product.product.price;
-            // const productPrice = product.price;
             const productQuantity = product.quantity;
-
-            console.log(product);
 
             if (productPrice != null && !isNaN(productPrice) && productQuantity > 0) {
                 return total + (productPrice * productQuantity);
             }
 
-            // If productPrice is invalid, log a warning and skip
             console.warn(`Invalid price or quantity for product ID: ${product.product._id}`);
             return total;
         }, 0);
 
-        // Save the updated order to the database
         await order.save();
-
-        // Return the updated order
         return res.status(200).json(order);
 
     } catch (error) {
@@ -240,13 +222,11 @@ const deleteOrder = async (req, res) => {
     }
 };
 
-// Fetch all delivery orders that are pending
 const getPendingDeliveryOrders = async (req, res) => {
     try {
         const pendingOrders = await Order.find({ status: 'In Progress', type: 'delivery' }).populate('products.product', 'name').populate("rider");
         res.status(200).json(pendingOrders);
 
-        // console.log(pendingOrders);
     } catch (error) {
         console.error('Error fetching pending delivery orders:', error);
         res.status(500).json({ message: 'Error fetching pending delivery orders' });

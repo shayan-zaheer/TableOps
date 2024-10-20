@@ -11,7 +11,6 @@ const addRider = async (req, res) => {
     }
 };
 
-// Get all drivers
 const getAllRiders = async (req, res) => {
     try {
         const riders = await Rider.find();
@@ -21,7 +20,6 @@ const getAllRiders = async (req, res) => {
     }
 };
 
-// Delete a driver
 const deleteRider = async (req, res) => {
     const { id } = req.params;
     try {

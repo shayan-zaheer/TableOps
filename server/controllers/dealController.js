@@ -3,8 +3,8 @@ const Deal = require("../models/deal");
 const getDeals = async (req, res) => {
     try {
         const deals = await Deal.find().populate({
-            path: 'products.productId', // Populate the productId within products
-            model: 'Product' // Reference to the Product model
+            path: 'products.productId',
+            model: 'Product'
         });
 
         console.log(deals);
