@@ -5,8 +5,6 @@ import UpdateProduct from '../components/UpdateProduct';
 const ProductsPage = () => {
     const location = useLocation();
     const action = new URLSearchParams(location.search).get("action");
-    
-    console.log(action); // Check if the action is being correctly parsed
 
     return (
         <>

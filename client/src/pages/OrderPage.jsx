@@ -13,7 +13,7 @@ function OrderPage() {
     const dispatch = useDispatch();
     const orderList = useSelector((store) => store.order.orders);
     const deliveryOrders = useSelector((store) => store.order.deliveryOrders);
-    const [createdOrder, setCreatedOrder] = useState(null); // Store the created order
+    const [createdOrder, setCreatedOrder] = useState(null);
 
     console.log(orderList);
 
@@ -32,7 +32,7 @@ function OrderPage() {
                 totalAmount: 1000,
                 type: type    
             });
-            setCreatedOrder(response.data); // Store the created order with _id
+            setCreatedOrder(response.data);
             toast.success('Order created successfully!');
         } catch (error) {
             console.error('Error creating order:', error);
@@ -41,9 +41,8 @@ function OrderPage() {
     };
 
     const handleRiderAssignment = (riderId) => {
-        // Update the order with the assigned rider
         const updatedOrder = { ...createdOrder, rider: riderId, status: 'In Progress' };
-        dispatch(orderActions.updateDeliveryOrders(updatedOrder)); // Dispatch the updated order
+        dispatch(orderActions.updateDeliveryOrders(updatedOrder));
     };
 
     const handleWaiterAssignment = (waiterId) => {
@@ -73,7 +72,6 @@ function OrderPage() {
                     <button className="block w-full p-2 bg-[rgb(167,132,36)] text-white rounded hover:bg-[rgb(233,195,90)]" onClick={() => handleCreateOrder("dinein")}>Create Dinein Order</button>
                 )}
 
-                {/* Show Rider Selection only after the order is created */}
                 {createdOrder && createdOrder.type === "delivery" && createdOrder.status === 'Pending' && (
                     <RiderSelection 
                         orderDetails={createdOrder}

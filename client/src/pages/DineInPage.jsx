@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import Select from 'react-select/creatable';
 import { orderActions } from '../store/orderSlice';
-import { auditActions } from '../store/auditSlice';  // Assuming you have an auditSlice
+import { auditActions } from '../store/auditSlice';
 
 function DineInPage() {
     const [dineInOrders, setDineInOrders] = useState([]);
@@ -51,12 +51,8 @@ function DineInPage() {
 
     const handleDeleteOrder = async (orderId) => {
         try {
-            // API call to delete the order
             await axios.delete(`http://localhost:8000/api/orders/${orderId}`);
-
-            // Remove the order from the pending list
             setDineInOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));
-
             toast.success('Order deleted successfully');
         } catch (error) {
             console.error('Error deleting order:', error);
@@ -77,19 +73,16 @@ function DineInPage() {
             return;
         }
     
-        // Fetch and populate product details
         const populatedItems = await Promise.all(
             itemsToAdd.map(async item => {
                 if (!item.product) {
                     const productDetails = await fetchProductById(item.product._id);
-                    return { ...item, product: productDetails }; // Populate the product details
+                    return { ...item, product: productDetails };
                 }
-                return item; // Return existing product
+                return item;
             })
         );
 
-        
-        // Update dineInOrders state locally
         setDineInOrders((prevOrders) =>
             prevOrders.map(order => {
                 if (order._id === orderId) {
@@ -101,21 +94,19 @@ function DineInPage() {
                         );
     
                         if (existingProductIndex !== -1) {
-                            // If the product exists, update the quantity
                             updatedProducts[existingProductIndex].quantity += item.quantity;
                         } else {
-                            // If the product doesn't exist, add it to the list
                             updatedProducts.push({
                                 product: item.product,
                                 quantity: item.quantity,
-                                _id: item.product._id // Assuming you need to keep track of IDs
+                                _id: item.product._id
                             });
                         }
                     });
     
                     // Calculate the total amount
                     const totalAmount = updatedProducts.reduce((total, product) => {
-                        const productPrice = product.product.price; // Use product.price from populated details
+                        const productPrice = product.product.price;
                         return total + (productPrice * product.quantity);
                     }, 0);
     
@@ -128,7 +119,7 @@ function DineInPage() {
         try {
             const response = await axios.put(`http://localhost:8000/api/orders/${orderId}/add-items`, { newItems: populatedItems });
             toast.success('Items added successfully');
-            setNewItems((prev) => ({ ...prev, [orderId]: [] })); // Clear added items after success
+            setNewItems((prev) => ({ ...prev, [orderId]: [] }));
         } catch (error) {
             console.error('Error adding items:', error);
             toast.error('Error adding items to the order');
@@ -165,14 +156,10 @@ function DineInPage() {
 
     const handleMarkAsCompleted = async (orderId, newStatus) => {
         try {
-            // Fetch the order that is being updated
             const orderToUpdate = dineInOrders.find(order => order._id === orderId);
-            
-            // Calculate total quantity and price
             const totalQuantity = orderToUpdate.products.reduce((total, product) => total + product.quantity, 0);
             const totalPrice = orderToUpdate.products.reduce((total, product) => total + (product.product.price * product.quantity), 0);
 
-            // Build audit log entry
             const auditLogEntry = {
                 orderId,
                 action: `Order ${orderId} status changed to ${newStatus}`,
@@ -185,22 +172,15 @@ function DineInPage() {
                 createdAt: Date.now(),
             };
 
-            // Log the audit entry in the backend
             await axios.post('http://localhost:8000/api/audit', auditLogEntry);
 
-            // Dispatch the audit log to Redux
             dispatch(auditActions.addAuditLog(auditLogEntry));
 
-            // Update the order status in the backend
             await axios.put(`http://localhost:8000/api/orders/${orderId}/update-status`, { status: newStatus });
 
-            // Show success notification
             toast.success(`Order status updated to ${newStatus}`);
-
-            // Remove the order from the dine-in orders list
             setDineInOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));
 
-            // Dispatch order removal action
             dispatch(orderActions.removeOrder());
         } catch (error) {
             console.error('Error marking order as completed:', error);
