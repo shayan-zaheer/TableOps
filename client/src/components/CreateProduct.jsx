@@ -32,14 +32,14 @@ function CreateProduct() {
         try {
             const name = nameRef.current.value;
             const category = categoryRef.current.value;
-            const price = parseFloat(priceRef.current.value); // Ensure price is a number
-            const image = imageRef.current.files[0]; // Get the uploaded image
+            const price = parseFloat(priceRef.current.value);
+            const image = imageRef.current.files[0];
 
             const formData = new FormData();
             formData.append('name', name);
             formData.append('category', category);
             formData.append('price', price);
-            formData.append('image', image); // Append image to formData
+            formData.append('image', image);
 
             const response = await axios.post('http://localhost:8000/api/products', formData, {
                 headers: {

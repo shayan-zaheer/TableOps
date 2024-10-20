@@ -1,4 +1,3 @@
-// src/components/UpdateProduct.js
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';

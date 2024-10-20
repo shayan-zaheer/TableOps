@@ -66,12 +66,8 @@ function PendingDeliveryOrders() {
 
     const handleDeleteOrder = async (orderId) => {
         try {
-            // API call to delete the order
             await axios.delete(`http://localhost:8000/api/orders/${orderId}`);
-
-            // Remove the order from the pending list
             setPendingOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));
-
             toast.success('Order deleted successfully');
         } catch (error) {
             console.error('Error deleting order:', error);
@@ -113,7 +109,6 @@ function PendingDeliveryOrders() {
                             >
                                 Mark as Completed
                             </button>
-                            {/* Delete Button */}
                             <button
                                 className="bg-red-500 text-white px-4 py-2 rounded"
                                 onClick={() => handleDeleteOrder(order._id)}

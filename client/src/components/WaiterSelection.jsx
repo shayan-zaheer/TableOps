@@ -12,7 +12,7 @@ function WaiterSelection({ orderDetails, onWaiterAssigned }) {
     useEffect(() => {
         const fetchWaiters = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/waiters'); // Update with your API endpoint for fetching waiters
+                const response = await axios.get('http://localhost:8000/api/waiters');
                 setWaiters(response.data);
             } catch (error) {
                 console.error('Error fetching waiters:', error);
@@ -35,7 +35,7 @@ function WaiterSelection({ orderDetails, onWaiterAssigned }) {
             });
             toast.success('Waiter assigned successfully!');
             onWaiterAssigned(selectedWaiter);
-            dispatch(orderActions.removeOrder()); // Remove order from the Redux store after assigning
+            dispatch(orderActions.removeOrder());
         } catch (error) {
             console.error('Error assigning waiter:', error);
             toast.error('Error assigning waiter.');

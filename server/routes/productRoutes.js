@@ -9,7 +9,6 @@ const {
     deleteProduct,
 } = require('../controllers/productController.js');
 
-// Routes
 router.post('/', upload.single("image"), createProduct);
 router.get('/', getProducts);
 router.get('/:id', getProductById);

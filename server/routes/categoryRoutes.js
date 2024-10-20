@@ -9,12 +9,11 @@ const {
     getCategoriesWithProducts
 } = require('../controllers/categoryController');
 
-// Routes
-router.post('/', createCategory); // Create a new category
-router.get('/', getCategories); // Get all categories
+router.post('/', createCategory);
+router.get('/', getCategories);
 router.get('/with-products', getCategoriesWithProducts);
-router.get('/:id', getCategoryById); // Get category by ID
-router.put('/:id', updateCategory); // Update category by ID
-router.delete('/:id', deleteCategory); // Delete category by ID
+router.get('/:id', getCategoryById);
+router.put('/:id', updateCategory);
+router.delete('/:id', deleteCategory);
 
 module.exports = router;

@@ -14,7 +14,6 @@ const {
     assignWaiterToOrder
 } = require('../controllers/orderController');
 
-// Routes
 router.get('/pending-dinein', getDineInOrder);
 router.put('/:orderId/add-items', addItemsToOrder);
 router.get('/pendingdelivery', getPendingDeliveryOrders);

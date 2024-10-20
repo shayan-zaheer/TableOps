@@ -3,23 +3,23 @@ import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategories } from '../store/categorySlice'; // Assuming you have products tied to categories
+import { setCategories } from '../store/categorySlice';
 
 function CreateDeal() {
     const titleRef = useRef();
     const priceRef = useRef();
     const imageRef = useRef();
     const dispatch = useDispatch();
-    const categories = useSelector(store => store.categories); // Assuming products are categorized
+    const categories = useSelector(store => store.categories);
 
-    const [selectedProducts, setSelectedProducts] = useState([]); // Track selected products
-    const [quantities, setQuantities] = useState({}); // Track quantities for selected products
+    const [selectedProducts, setSelectedProducts] = useState([]);
+    const [quantities, setQuantities] = useState({});
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const response = await axios.get('http://localhost:8000/api/categories/with-products');
-                dispatch(setCategories(response.data)); // Fetch categories with products
+                dispatch(setCategories(response.data));
             } catch (error) {
                 console.error('Error fetching categories and products:', error);
                 toast.error('Error fetching products.');
@@ -49,7 +49,7 @@ function CreateDeal() {
     const handleQuantityChange = (productId, value) => {
         setQuantities(prevQuantities => ({
             ...prevQuantities,
-            [productId]: Math.max(1, parseInt(value)) // Ensure quantity is at least 1
+            [productId]: Math.max(1, parseInt(value))
         }));
     };
 
@@ -59,28 +59,22 @@ function CreateDeal() {
         try {
             const title = titleRef.current.value;
             const price = parseFloat(priceRef.current.value);
-            const image = imageRef.current.files[0]; // If you're using an image
+            const image = imageRef.current.files[0];
     
-            // Validate the price
             if (isNaN(price)) {
                 toast.error('Price must be a valid number.');
-                return; // Prevent submission if price is invalid
+                return;
             }
-    
-            // Prepare the products data correctly as an array of ObjectId strings
-            // Ensure selectedProducts contains valid ObjectId strings that exist in your Product collection
+
             const products = selectedProducts.map(productId => ({
                 productId: productId,
-                quantity: quantities[productId] // Ensure this value is a number
+                quantity: quantities[productId]
             }));            
-    
-            // Log to check values being submitted
-            console.log('Submitting deal:', { title, price, products });
     
             const dealData = {
                 name: title,
-                price, // Make sure this is a number
-                products // Send the array of ObjectIds directly
+                price,
+                products
             };
     
             const config = {
@@ -89,10 +83,6 @@ function CreateDeal() {
                 },
             };
     
-            // Log to confirm the dealData structure
-            console.log('Deal data:', dealData);
-    
-            // Post the deal data to the server
             const response = await axios.post('http://localhost:8000/api/deals', dealData, config);
     
             if (response.status === 201) {

@@ -4,23 +4,17 @@ import { orderActions } from "../store/orderSlice";
 import toast from "react-hot-toast";
 
 function Deal({ name, price, image, dealItems }) {
-    console.log("DEALLLLL", dealItems); 
-
     const dispatch = useDispatch();
     const quantityRef = useRef();
     const conPrice = price;
     const [priceState, setPriceState] = useState(price);
 
-    console.log("DEALITEMSSSSSSSSSSSS", dealItems);
-
     const handleAddDeal = () => {
-
-        // Add each item in the deal to the order
         dealItems.forEach(item => {
             dispatch(orderActions.addItem({
                 name: item.productId.name,
                 price: item.productId.price,
-                quantity: item.quantity, // Adding same quantity for each item in the deal
+                quantity: item.quantity,
             }));
         });
 
@@ -56,15 +50,6 @@ function Deal({ name, price, image, dealItems }) {
                     >
                         Add Deal to Order
                     </button>
-
-                    {/* <input
-                        type="number"
-                        ref={quantityRef}
-                        onChange={() => setPriceState(conPrice * quantityRef.current.value)}
-                        min={1}
-                        defaultValue={1}
-                        className="appearance-none w-24 border border-gray-300 rounded-md py-1.5 px-4 text-center focus:outline-none focus:ring-4 focus:ring-blue-300"
-                    /> */}
                 </div>
             </div>
         </div>
