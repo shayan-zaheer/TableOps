@@ -3,6 +3,7 @@ import { setCategories, removeProductFromCategory } from '../store/categorySlice
 import axios from "axios";
 import Product from '../components/Product';
 import { useEffect } from 'react';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const MenuPage = () => {
     const dispatch = useDispatch();
@@ -53,7 +54,7 @@ const MenuPage = () => {
                     </div>
                 ))
             ) : (
-                <p className="text-center text-gray-700">No categories or products available.</p>
+                <LoadingSpinner />
             )}
         </div>
     );

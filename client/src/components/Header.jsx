@@ -61,42 +61,7 @@ function Header() {
                         Waiters
                     </li>
                 </Link>
-
-                <div className="relative" onMouseLeave={() => setProductsDropdownOpen(false)}>
-                    <li onMouseEnter={toggleProductsDropdown} className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname.includes("/products") ? "bg-[rgb(129,86,29)]  text-white" : "hover:bg-[rgb(126,101,69)] hover:text-white text-black"}`}>
-                        Products
-                    </li>
-                    {isProductsDropdownOpen && (
-                        <div className="absolute left-0 w-40 bg-[rgb(160,99,25)] text-white rounded-md shadow-lg z-10">
-                            <Link to="/products?action=create">
-                                <li className="py-2 px-4 hover:bg-green-100 hover:text-black cursor-pointer">Add Product</li>
-                            </Link>
-                            <Link to="/products?action=update">
-                                <li className="py-2 px-4 hover:bg-green-100 hover:text-black cursor-pointer">Update Product</li>
-                            </Link>
-                            <Link to="/products/delete">
-                                <li className="py-2 px-4 hover:bg-green-100 hover:text-black cursor-pointer">Delete Product</li>
-                            </Link>
-                        </div>
-                    )}
-                </div>
-
-                <div className="relative" onMouseLeave={() => setCategoriesDropdownOpen(false)}>
-                    <li onMouseEnter={toggleCategoriesDropdown} className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname.includes("/categories") ? "bg-[rgb(129,86,29)]  text-white" : "hover:bg-[rgb(126,101,69)] hover:text-white text-black"}`}>
-                        Categories
-                    </li>
-                    {isCategoriesDropdownOpen && (
-                        <div className="absolute left-0 w-40 bg-[rgb(160,99,25)]  text-white rounded-md shadow-lg z-10">
-                            <Link to="/categories?action=create">
-                                <li className="py-2 px-4 hover:bg-green-100 hover:text-black cursor-pointer">Add Category</li>
-                            </Link>
-                            <Link to="/categories?action=update">
-                                <li className="py-2 px-4 hover:bg-green-100 hover:text-black cursor-pointer">Update Category</li>
-                            </Link>
-                        </div>
-                    )}
-                </div>
-
+             
                 <Link to="/audit">
                     <li className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer ${pathname === "/audit" ? "bg-[rgb(129,86,29)]  text-white" : "hover:bg-[rgb(126,101,69)] hover:text-white text-black"}`}>
                         Audit

@@ -133,8 +133,6 @@ function AuditPage() {
         printWindow.print();
     };
     
-
-
     useEffect(() => {
         let filtered = logs;
 
@@ -219,7 +217,7 @@ function AuditPage() {
                     ))}
                 </select>
             </div>
-
+            
             <button
                 onClick={toggleCollapse}
                 className="bg-[rgb(255,206,146)] text-black cursor-pointer p-4 w-full border-none text-left outline-none text-lg hover:bg-[rgb(207,156,90)]"

@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { orderActions } from '../store/orderSlice';
 import { auditActions } from '../store/auditSlice';
+import LoadingSpinner from './LoadingSpinner';
 
 function PendingDeliveryOrders() {
     const dispatch = useDispatch();
@@ -53,6 +54,8 @@ function PendingDeliveryOrders() {
                 createdAt: Date.now(),
             };
 
+            console.log(auditLogEntry);
+
             await axios.post('http://localhost:8000/api/audit', auditLogEntry);
             dispatch(auditActions.addAuditLog(auditLogEntry));
 
@@ -79,7 +82,7 @@ function PendingDeliveryOrders() {
     };
 
     if (loading) {
-        return <div>Loading pending orders...</div>;
+        return <LoadingSpinner />;
     }
 
     if (pendingOrders.length === 0) {

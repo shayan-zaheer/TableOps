@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import Select from 'react-select/creatable';
 import { orderActions } from '../store/orderSlice';
 import { auditActions } from '../store/auditSlice';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 function DineInPage() {
     const [dineInOrders, setDineInOrders] = useState([]);
@@ -189,7 +190,7 @@ function DineInPage() {
     };
 
     if (loading) {
-        return <div>Loading dine-in orders...</div>;
+        return <LoadingSpinner />;
     }
 
     if (dineInOrders.length === 0) {
