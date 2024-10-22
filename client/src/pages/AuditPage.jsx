@@ -62,9 +62,6 @@ function AuditPage() {
                 <img src="/images/logo.png" alt="Logo" style="height: 50px; margin-right: 10px;" />
                 <h1>Order ID: ${orderId}</h1>
             </div>`;
-    
-
-            console.log("SELECTED AUDIT:", selectedAudit);
 
         if (selectedAudit.order.type === "dinein") {
             const waiterName = selectedAudit.order.waiter?.name || "N/A";
@@ -126,6 +123,8 @@ function AuditPage() {
                 </head>
                 <body>
                     ${printContent}
+                    <h4>Developed by Sajjad/Shayan Zaheer</h4>
+                    <h4>Contact: +92 336 2199705
                 </body>
             </html>
         `);
