@@ -40,8 +40,8 @@ function OrderPage() {
         }
     };
 
-    const handleRiderAssignment = (riderId) => {
-        const updatedOrder = { ...createdOrder, rider: riderId, status: 'In Progress' };
+    const handleRiderAssignment = (riderId, customerNumber) => {
+        const updatedOrder = { ...createdOrder, rider: riderId, status: 'In Progress', customerNumber };
         dispatch(orderActions.updateDeliveryOrders(updatedOrder));
     };
 
@@ -71,6 +71,7 @@ function OrderPage() {
                 {!createdOrder && (
                     <button className="block w-full p-2 bg-[rgb(167,132,36)] text-white rounded hover:bg-[rgb(233,195,90)]" onClick={() => handleCreateOrder("dinein")}>Create Dinein Order</button>
                 )}
+
 
                 {createdOrder && createdOrder.type === "delivery" && createdOrder.status === 'Pending' && (
                     <RiderSelection 

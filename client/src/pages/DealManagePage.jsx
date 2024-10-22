@@ -1,11 +1,11 @@
-import CreateDeal from "../components/CreateDeal";
+// import CreateDeal from "../components/CreateDeal";
 
-const DealManagePage = () => {
-    return (
-        <>
-            <CreateDeal />
-        </>
-    );
-};
+// const DealManagePage = () => {
+//     return (
+//         <>
+//             <CreateDeal />
+//         </>
+//     );
+// };
 
-export default DealManagePage;
+// export default DealManagePage;

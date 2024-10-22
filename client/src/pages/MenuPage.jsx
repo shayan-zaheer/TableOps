@@ -38,7 +38,7 @@ const MenuPage = () => {
             {categories.length > 0 ? (
                 categories.map((category) => (
                     <div key={category._id} className="w-full max-w-4xl mb-10">
-                        <h2 className="text-2xl font-bold mb-4">{category.title}</h2>
+                        <h2 className="text-3xl font-bold mb-4 text-center">{category.title}</h2>
                         <div className="flex flex-row justify-center flex-wrap gap-6">
                             {category.products.map((product) => (
                                 <Product

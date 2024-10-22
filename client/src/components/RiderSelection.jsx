@@ -8,6 +8,7 @@ function RiderSelection({ orderDetails, onRiderAssigned }) {
     const [riders, setRiders] = useState([]);
     const dispatch = useDispatch();
     const [selectedRider, setSelectedRider] = useState("");
+    const [customerNumber, setCustomerNumber] = useState();
 
     useEffect(() => {
         const fetchRiders = async () => {
@@ -31,10 +32,10 @@ function RiderSelection({ orderDetails, onRiderAssigned }) {
 
         try {
             await axios.put(`http://localhost:8000/api/orders/${orderDetails._id}/assign-rider`, {
-                riderId: selectedRider
+                riderId: selectedRider, customerNumber: customerNumber
             });
             toast.success('Rider assigned successfully!');
-            onRiderAssigned(selectedRider);
+            onRiderAssigned(selectedRider, customerNumber);
             dispatch(orderActions.removeOrder());
         } catch (error) {
             console.error('Error assigning rider:', error);
@@ -44,14 +45,16 @@ function RiderSelection({ orderDetails, onRiderAssigned }) {
 
     return (
         <div>
-            <h3>Select a Rider</h3>
+            <h3 className="text-white">Select a Rider</h3>
             <select value={selectedRider} onChange={(e) => setSelectedRider(e.target.value)}>
                 <option value="" disabled>Select a Rider</option>
                 {riders.map((rider) => (
                     <option key={rider._id} value={rider._id}>{rider.name}</option>
                 ))}
-            </select>
-            <button className='ml-2 p-2 bg-[rgb(145,106,24)] hover:bg-[rgb(211,175,97)] rounded-sm mb-2' onClick={handleAssignRider}>Assign Rider</button>
+            </select><br />
+            <label htmlFor="mobile" className="text-white mr-3">Number of Customer:</label>
+            <input type="text" id="mobile" value={customerNumber} onChange={e => setCustomerNumber(e.target.value)} />
+            <button className='ml-2 p-2 text-white bg-[rgb(145,106,24)] hover:bg-[rgb(211,175,97)] rounded-sm mb-2' onClick={handleAssignRider}>Assign Rider</button>
         </div>
     );
 }

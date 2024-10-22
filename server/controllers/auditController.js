@@ -94,6 +94,8 @@ const addAuditLog = async (req, res) => {
 
         await newAuditLog.save();
 
+        console.log(newAuditLog);
+
         res.status(201).json({
             success: true,
             message: "Audit log created for order",

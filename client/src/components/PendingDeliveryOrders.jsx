@@ -38,6 +38,8 @@ function PendingDeliveryOrders() {
             const totalQuantity = orderToUpdate.products.reduce((total, item) => total + item.quantity, 0);
             const totalPrice = orderToUpdate.totalAmount;
 
+            console.log("ORDER TO UPDATE", orderToUpdate)
+
             const auditLogEntry = {
                 orderId,
                 action: `Order ${orderId} status changed to ${newStatus}`,
@@ -47,6 +49,7 @@ function PendingDeliveryOrders() {
                     name: item.product.name,
                     quantity: item.quantity,
                 })),
+                customerNumber: orderToUpdate?.customerNumber,
                 createdAt: Date.now(),
             };
 
@@ -83,6 +86,8 @@ function PendingDeliveryOrders() {
         return <div>No pending delivery orders.</div>;
     }
 
+    console.log("PENDING ORDERSSSSSS", pendingOrders);
+
     return (
         <div className="container mx-auto">
             <h1 className="text-2xl font-bold my-4">Pending Delivery Orders</h1>
@@ -91,6 +96,7 @@ function PendingDeliveryOrders() {
                     <li key={order._id} className="bg-white p-4 shadow rounded flex justify-between items-center">
                         <div>
                             <p><strong>Order ID:</strong> {order._id}</p>
+                            <p><strong>Customer Number: {order?.customerNumber}</strong></p>
                             <p><strong>Products:</strong></p>
                             <ul className="list-disc ml-4">
                                 {order.products.map((item, index) => (

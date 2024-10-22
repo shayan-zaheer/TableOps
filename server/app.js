@@ -10,7 +10,7 @@ const riderRoutes = require('./routes/riderRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const auditRoutes = require('./routes/auditRoutes');
 const waiterRoutes = require('./routes/waiterRoutes');
-const dealRoutes = require('./routes/dealRoutes');
+// const dealRoutes = require('./routes/dealRoutes');
 
 const app = express();
 
@@ -27,7 +27,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/riders', riderRoutes);
 app.use('/api/audit', auditRoutes);
-app.use('/api/deals', dealRoutes);
+// app.use('/api/deals', dealRoutes);
 
 mongoose.connect(process.env.MONGO_URL).then((conObj)=>{
     console.log("DB Connection Successful!");

@@ -32,15 +32,21 @@ function OrderFooter() {
     
         try {
             if (type === "takeaway") {
-                // First, create an order for takeaway
-                const response = await axios.post('http://localhost:8000/api/orders/', {
-                    products: orderList,
-                    totalAmount: totalPrice,
-                    type: 'takeaway',
-                });
-
-                console.log(response);
-    
+                let response;
+                if(orderList[0]?.dealPrice){
+                    response = await axios.post('http://localhost:8000/api/orders/', {
+                        products: orderList,
+                        totalAmount: orderList[0]?.dealPrice,
+                        type: 'takeaway',
+                    });
+                } else {
+                    response = await axios.post('http://localhost:8000/api/orders/', {
+                        products: orderList,
+                        totalAmount: totalPrice,
+                        type: 'takeaway',
+                    });
+                }
+                
                 if (response.status === 201) {
                     const orderId = response.data._id;
     
@@ -53,9 +59,10 @@ function OrderFooter() {
                     });
     
                     toast.success(`Takeaway order confirmed! Total Price: Rs. ${totalPrice}`);
-                    dispatch(orderActions.removeOrder()); // Clear orders on success
+                    dispatch(orderActions.removeOrder());
                 }
-            } 
+                }
+                
         } catch (error) {
             console.error(`Error confirming ${type} order:`, error);
             toast.error(`Error confirming ${type} order: ${error.response ? error.response.data.message : error.message}`);
@@ -66,7 +73,7 @@ function OrderFooter() {
     return (
         <div>
             <div className="flex justify-between items-center mt-4 p-3 bg-[rgb(109,94,76)] text-white rounded">
-                <span className="font-semibold">Total Price: Rs. {totalPrice}</span>
+                <span className="font-semibold">Total Price: Rs. {orderList[0]?.dealPrice ? orderList[0]?.dealPrice : totalPrice}</span>
                 <button onClick={handleConfirmOrder} className="text-green-500 hover:text-green-700 font-semibold">
                     Confirm Order(Takeaway)
                 </button>

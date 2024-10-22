@@ -193,11 +193,11 @@ function DineInPage() {
     }
 
     if (dineInOrders.length === 0) {
-        return <div>No ongoing dine-in orders.</div>;
+        return <div className='h-screen bg-[rgb(218,174,120)]'>No ongoing dine-in orders.</div>;
     }
 
     return (
-        <div className="flex flex-col h-[83vh] bg-[rgb(218,174,120)] px-5">
+        <div className="flex flex-col h-screen bg-[rgb(218,174,120)] px-5">
             <h1 className="text-2xl font-bold my-4">Ongoing Dine-In Orders</h1>
             <ul className="space-y-4">
                 {dineInOrders.map(order => (

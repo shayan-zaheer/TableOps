@@ -4,6 +4,11 @@ import axios from "axios";
 import { auditActions } from "../store/auditSlice";
 
 function AuditPage() {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentDay = currentDate.getDate();
+
     const dispatch = useDispatch();
     const logs = useSelector((store) => store.audit.audit);
     
@@ -12,6 +17,13 @@ function AuditPage() {
     const [selectedYear, setSelectedYear] = useState("");
     const [selectedMonth, setSelectedMonth] = useState("");
     const [selectedDay, setSelectedDay] = useState("");
+
+    
+    useEffect(() => {
+        setSelectedDay(currentDay);
+        setSelectedMonth(currentMonth);
+        setSelectedYear(currentYear);
+    }, [currentYear, currentMonth, currentDay]);
 
     useEffect(() => {
         const getLogs = async () => {
@@ -33,20 +45,18 @@ function AuditPage() {
     const printReceipts = (orderId) => {
         const categoriesMap = {};
     
-        // Step 1: Find the specific audit based on the orderId
         const selectedAudit = filteredLogs.find(audit => audit.order._id === orderId);
     
         if (!selectedAudit) {
             console.error("No audit found for the given order ID.");
-            return; // Exit if no matching audit is found
+            return;
         }
     
-        const products = selectedAudit.order.products; // Get products for the selected order
+        const products = selectedAudit.order.products;
     
         products.forEach(item => {
-            const productCategory = item.product.category.title; // Get the category title
-    
-            // Initialize the category in the map if it doesn't exist
+            const productCategory = item.product.category.title;
+  
             if (!categoriesMap[productCategory]) {
                 categoriesMap[productCategory] = {
                     category: productCategory,
@@ -54,24 +64,31 @@ function AuditPage() {
                     totalAmount: 0
                 };
             }
-    
-            // Add item to the category
+ 
             categoriesMap[productCategory].items.push(item);
-            categoriesMap[productCategory].totalAmount += item.product.price * item.quantity; // Update total amount
+            categoriesMap[productCategory].totalAmount += item.product.price * item.quantity;
         });
     
-        // Step 2: Prepare the HTML for printing
         let printContent = `
             <div style="display: flex; align-items: center;">
                 <img src="/images/logo.png" alt="Logo" style="height: 50px; margin-right: 10px;" />
                 <h1>Order ID: ${orderId}</h1>
             </div>`;
     
-        // Include waiter information if order type is dinein
+
+            console.log("SELECTED AUDIT:", selectedAudit);
+
         if (selectedAudit.order.type === "dinein") {
             const waiterName = selectedAudit.order.waiter?.name || "N/A";
             printContent += `<p>Waiter: ${waiterName}</p>`;
-        }
+        } else if(selectedAudit.order.type === "delivery"){
+
+            const riderName = selectedAudit.order.rider?.name || "N/A";
+            const customerNumber = selectedAudit.order?.customerNumber || "N/A";
+            printContent += `<p>Rider: ${riderName}</p>
+                            <p>Customer Number: ${customerNumber}</p>
+            `
+        };
     
         Object.values(categoriesMap).forEach(categoryData => {
             const { category, items, totalAmount } = categoryData;
@@ -92,7 +109,6 @@ function AuditPage() {
             `;
         });
     
-        // Step 3: Open print dialog with the generated content
         const printWindow = window.open('', '_blank');
         printWindow.document.write(`
             <html>
@@ -129,8 +145,6 @@ function AuditPage() {
         printWindow.print();
     };
     
-
-
     useEffect(() => {
         let filtered = logs;
 
@@ -245,7 +259,10 @@ function AuditPage() {
                                 </button>   
 
                                 {order?.order?.type === "delivery" && (
-                                    <p className="text-black">Rider: <i>{order?.order?.rider?.name}</i></p>  
+                                   <>
+                                     <p className="text-black">Rider: <i>{order?.order?.rider?.name}</i></p>
+                                     <p className="text-black">Customer Number: <i>{order?.order?.customerNumber}</i></p> 
+                                   </> 
                                 )}
 
                                 {order?.order?.type === "dinein" && (

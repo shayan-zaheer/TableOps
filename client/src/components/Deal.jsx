@@ -15,8 +15,13 @@ function Deal({ name, price, image, dealItems }) {
                 name: item.productId.name,
                 price: item.productId.price,
                 quantity: item.quantity,
+                dealPrice: price
             }));
         });
+
+        // dispatch(orderActions.addItem({
+
+        // }))
 
         toast.success(`${name} (deal) added to order!`, {
             duration: 3000,

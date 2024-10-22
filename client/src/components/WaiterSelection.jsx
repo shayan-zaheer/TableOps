@@ -44,7 +44,7 @@ function WaiterSelection({ orderDetails, onWaiterAssigned }) {
 
     return (
         <div>
-            <h3>Select a Waiter</h3>
+            <h3 className="text-white">Select a Waiter</h3>
             <select value={selectedWaiter} onChange={(e) => setSelectedWaiter(e.target.value)}>
                 <option value="" disabled>Select a Waiter</option>
                 {waiters.map((waiter) => (
@@ -52,7 +52,7 @@ function WaiterSelection({ orderDetails, onWaiterAssigned }) {
                 ))}
             </select>
             <button 
-                className='ml-2 p-2 bg-[rgb(145,106,24)] hover:bg-[rgb(211,175,97)] rounded-sm mb-2' 
+                className='ml-2 p-2 text-white bg-[rgb(145,106,24)] hover:bg-[rgb(211,175,97)] rounded-sm mb-2' 
                 onClick={handleAssignWaiter}
             >
                 Assign Waiter

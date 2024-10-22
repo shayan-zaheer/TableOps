@@ -71,11 +71,11 @@ const updateOrderStatus = async (req, res) => {
 const assignRiderToOrder = async (req, res) => {
     try {
         const { orderId } = req.params;
-        const { riderId } = req.body;
+        const { riderId, customerNumber } = req.body;
 
         const updatedOrder = await Order.findByIdAndUpdate(
             orderId,
-            { rider: riderId, status: 'In Progress' }, 
+            { rider: riderId, status: 'In Progress', customerNumber }, 
             { new: true }
         );
 
