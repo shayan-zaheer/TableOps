@@ -4,11 +4,6 @@ import axios from "axios";
 import { auditActions } from "../store/auditSlice";
 
 function AuditPage() {
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth() + 1;
-    const currentDay = currentDate.getDate();
-
     const dispatch = useDispatch();
     const logs = useSelector((store) => store.audit.audit);
     
@@ -17,17 +12,6 @@ function AuditPage() {
     const [selectedYear, setSelectedYear] = useState("");
     const [selectedMonth, setSelectedMonth] = useState("");
     const [selectedDay, setSelectedDay] = useState("");
-
-    useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            setSelectedYear(currentYear);
-            setSelectedMonth(currentMonth);
-            setSelectedDay(currentDay);
-        }, 1000);
-
-        return () => clearTimeout(timeoutId);
-
-    }, [currentYear, currentMonth, currentDay]);
 
     useEffect(() => {
         const getLogs = async () => {
@@ -149,6 +133,8 @@ function AuditPage() {
         printWindow.print();
     };
     
+
+
     useEffect(() => {
         let filtered = logs;
 
