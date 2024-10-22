@@ -18,11 +18,15 @@ function AuditPage() {
     const [selectedMonth, setSelectedMonth] = useState("");
     const [selectedDay, setSelectedDay] = useState("");
 
-    
     useEffect(() => {
-        setSelectedDay(currentDay);
-        setSelectedMonth(currentMonth);
-        setSelectedYear(currentYear);
+        const timeoutId = setTimeout(() => {
+            setSelectedYear(currentYear);
+            setSelectedMonth(currentMonth);
+            setSelectedDay(currentDay);
+        }, 1000);
+
+        return () => clearTimeout(timeoutId);
+
     }, [currentYear, currentMonth, currentDay]);
 
     useEffect(() => {
