@@ -11,6 +11,8 @@ function PendingDeliveryOrders() {
     const [pendingOrders, setPendingOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    console.log(pendingOrders);
+
     useEffect(() => {
         const fetchPendingOrders = async () => {
             try {
@@ -39,8 +41,6 @@ function PendingDeliveryOrders() {
             const totalQuantity = orderToUpdate.products.reduce((total, item) => total + item.quantity, 0);
             const totalPrice = orderToUpdate.totalAmount;
 
-            console.log("ORDER TO UPDATE", orderToUpdate)
-
             const auditLogEntry = {
                 orderId,
                 action: `Order ${orderId} status changed to ${newStatus}`,
@@ -53,8 +53,6 @@ function PendingDeliveryOrders() {
                 customerNumber: orderToUpdate?.customerNumber,
                 createdAt: Date.now(),
             };
-
-            console.log(auditLogEntry);
 
             await axios.post('http://localhost:8000/api/audit', auditLogEntry);
             dispatch(auditActions.addAuditLog(auditLogEntry));
@@ -81,6 +79,53 @@ function PendingDeliveryOrders() {
         }
     };
 
+    const printTokenByCategory = (order) => {
+        console.log("REALEST", order);
+    
+        const groupedItems = order.products.reduce((acc, item) => {
+            const category = item?.product?.category?.title || 'Uncategorized';
+            if (!acc[category]) {
+                acc[category] = [];
+            }
+            acc[category].push(item);
+            return acc;
+        }, {});
+    
+        const printCategory = (category, items) => {
+            const tokenWindow = window.open('', 'PRINT', 'height=400,width=600');
+            
+            if (!tokenWindow) {
+                console.error('Unable to open print window');
+                return;
+            }
+    
+            tokenWindow.document.write(`<html><head><title>${category} Token for Order ${order._id}</title>`);
+            tokenWindow.document.write('</head><body>');
+            tokenWindow.document.write(`<h1>${category} Receipt for Order ID: ${order._id}</h1>`);
+            tokenWindow.document.write(`<p>Rider: ${order?.rider?.name || 'Unknown'}</p>`);
+            
+            items.forEach(item => {
+                tokenWindow.document.write(`<p>${item.product.name} - Quantity: ${item.quantity}</p>`);
+            });
+    
+            tokenWindow.document.write('</body></html>');
+            tokenWindow.document.close();
+            tokenWindow.focus();
+    
+            tokenWindow.print();
+            setTimeout(() => {
+                tokenWindow.close();
+            }, 500);
+        };
+    
+        Object.entries(groupedItems).forEach(([category, items], index) => {
+            setTimeout(() => {
+                printCategory(category, items);
+            }, index * 700);
+        });
+    };
+    
+
     if (loading) {
         return <LoadingSpinner />;
     }
@@ -89,7 +134,7 @@ function PendingDeliveryOrders() {
         return <div>No pending delivery orders.</div>;
     }
 
-    console.log("PENDING ORDERSSSSSS", pendingOrders);
+    console.log("PENDING:", pendingOrders);
 
     return (
         <div className="container mx-auto">
@@ -99,7 +144,7 @@ function PendingDeliveryOrders() {
                     <li key={order._id} className="bg-white p-4 shadow rounded flex justify-between items-center">
                         <div>
                             <p><strong>Order ID:</strong> {order._id}</p>
-                            <p><strong>Customer Number: {order?.customerNumber}</strong></p>
+                            <p><strong>Customer Number:</strong> {order?.customerNumber}</p>
                             <p><strong>Products:</strong></p>
                             <ul className="list-disc ml-4">
                                 {order.products.map((item, index) => (
@@ -123,6 +168,12 @@ function PendingDeliveryOrders() {
                                 onClick={() => handleDeleteOrder(order._id)}
                             >
                                 Delete Order
+                            </button>
+                            <button
+                                className="bg-blue-500 text-white px-4 py-2 rounded"
+                                onClick={() => printTokenByCategory(order)}
+                            >
+                                Print Token
                             </button>
                         </div>
                     </li>

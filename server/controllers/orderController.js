@@ -13,6 +13,8 @@ const createOrder = async (req, res) => {
         const productPromises = products.map(async (item) => {
             const foundProduct = await Product.findOne({ name: item.name }).populate('category');
 
+            console.log(foundProduct);
+
             if (!foundProduct) {
                 throw new Error(`Product '${item.name}' not found`);
             }
@@ -27,6 +29,8 @@ const createOrder = async (req, res) => {
         });
 
         const transformedProducts = await Promise.all(productPromises);
+
+        console.log(transformedProducts);
 
         const newOrder = new Order({
             products: transformedProducts,
@@ -185,7 +189,14 @@ const addItemsToOrder = async (req, res) => {
 const getDineInOrder = async (req, res) => {
     try {
         const dineInOrders = await Order.find({ type: 'dinein', status: 'Pending' })
-    .populate('products.product', 'name price').populate("waiter");
+        .populate({
+            path: 'products.product',
+            select: 'name category price',
+            populate: {
+                path: 'category',
+                select: 'title'
+            }
+        }).populate("waiter");
 
         return res.status(200).json(dineInOrders);
     } catch (error) {
@@ -224,14 +235,24 @@ const deleteOrder = async (req, res) => {
 
 const getPendingDeliveryOrders = async (req, res) => {
     try {
-        const pendingOrders = await Order.find({ status: 'In Progress', type: 'delivery' }).populate('products.product', 'name').populate("rider");
-        res.status(200).json(pendingOrders);
+        const pendingOrders = await Order.find({ status: 'In Progress', type: 'delivery' })
+            .populate({
+                path: 'products.product',
+                select: 'name category',
+                populate: {
+                    path: 'category',
+                    select: 'title'
+                }
+            })
+            .populate('rider');
 
+        res.status(200).json(pendingOrders);
     } catch (error) {
         console.error('Error fetching pending delivery orders:', error);
         res.status(500).json({ message: 'Error fetching pending delivery orders' });
     }
 };
+
 
 module.exports = {
     createOrder,

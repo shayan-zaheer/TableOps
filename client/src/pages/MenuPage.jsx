@@ -22,17 +22,17 @@ const MenuPage = () => {
     };
 
     useEffect(() => {
-      const fetchCategories = async () => {
-          try {
-              const response = await axios.get('http://localhost:8000/api/categories/with-products');
-              dispatch(setCategories(response.data));
-          } catch (error) {
-              console.error("Error fetching categories:", error);
-          }
-      };
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/api/categories/with-products');
+                dispatch(setCategories(response.data));
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            }
+        };
 
-      fetchCategories();
-  }, [dispatch]); 
+        fetchCategories();
+    }, [dispatch]); 
 
     return (
         <div className="flex flex-col items-center py-8 h-100 bg-[rgb(255,206,146)]">
@@ -47,6 +47,7 @@ const MenuPage = () => {
                                     name={product.name}
                                     price={product.price}
                                     image={product.image}
+                                    category={category.title}
                                     onDelete={() => deleteProductHandler(product._id, category._id)}
                                 />
                             ))}

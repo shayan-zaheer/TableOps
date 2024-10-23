@@ -10,7 +10,7 @@ function OrderFooter() {
     const [showDialog, setShowDialog] = useState(false);
     const totalPrice = orderList.reduce((total, order) => total + order.price * order.quantity, 0);
 
-    console.log("ORDER:",orderList)
+    console.log("ORDER:", orderList);
 
     const handleConfirmOrder = () => {
         if (totalPrice > 0) {
@@ -18,6 +18,49 @@ function OrderFooter() {
         } else {
             alert("No items in the order.");
         }
+    };
+
+    const printTokenByCategory = (orderId) => {
+        const groupedItems = orderList.reduce((acc, item) => {
+            const category = item?.category || 'Uncategorized';
+            if (!acc[category]) {
+                acc[category] = [];
+            }
+            acc[category].push(item);
+            return acc;
+        }, {});
+
+        const printCategory = (category, items) => {
+            const tokenWindow = window.open('', 'PRINT', 'height=400,width=600');
+            
+            if (!tokenWindow) {
+                console.error('Unable to open print window');
+                return;
+            }
+
+            tokenWindow.document.write(`<html><head><title>${category} Token</title>`);
+            tokenWindow.document.write('</head><body>');
+            tokenWindow.document.write(`<h1>Token for Order ${orderId}</h1>`);
+            tokenWindow.document.write(`<h1>${category} Receipt</h1>`);
+
+            items.forEach(item => {
+                tokenWindow.document.write(`<p>${item.name} - Quantity: ${item.quantity}</p>`);
+            });
+
+            tokenWindow.document.write('</body></html>');
+            tokenWindow.document.close();
+            tokenWindow.focus();
+            tokenWindow.print();
+            setTimeout(() => {
+                tokenWindow.close();
+            }, 500);
+        };
+
+        Object.entries(groupedItems).forEach(([category, items], index) => {
+            setTimeout(() => {
+                printCategory(category, items);
+            }, index * 700);
+        });
     };
 
     const handleOrderTypeSelection = async (type) => {
@@ -29,11 +72,11 @@ function OrderFooter() {
             items: orderList.map(order => ({ name: order.name, quantity: order.quantity })),
             createdAt: Date.now(),
         };
-    
+
         try {
             if (type === "takeaway") {
                 let response;
-                if(orderList[0]?.dealPrice){
+                if (orderList[0]?.dealPrice) {
                     response = await axios.post('http://localhost:8000/api/orders/', {
                         products: orderList,
                         totalAmount: orderList[0]?.dealPrice,
@@ -46,10 +89,10 @@ function OrderFooter() {
                         type: 'takeaway',
                     });
                 }
-                
+
                 if (response.status === 201) {
                     const orderId = response.data._id;
-    
+
                     console.log(orderId);
 
                     await axios.post('http://localhost:8000/api/audit/', {
@@ -57,25 +100,26 @@ function OrderFooter() {
                         auditLogEntry,
                         orderId
                     });
-    
+                    
+                    printTokenByCategory(orderId);
+
                     toast.success(`Takeaway order confirmed! Total Price: Rs. ${totalPrice}`);
                     dispatch(orderActions.removeOrder());
+
                 }
-                }
-                
+            }
         } catch (error) {
             console.error(`Error confirming ${type} order:`, error);
             toast.error(`Error confirming ${type} order: ${error.response ? error.response.data.message : error.message}`);
         }
     };
-    
 
     return (
         <div>
             <div className="flex justify-between items-center mt-4 p-3 bg-[rgb(109,94,76)] text-white rounded">
                 <span className="font-semibold">Total Price: Rs. {orderList[0]?.dealPrice ? orderList[0]?.dealPrice : totalPrice}</span>
                 <button onClick={handleConfirmOrder} className="text-green-500 hover:text-green-700 font-semibold">
-                    Confirm Order(Takeaway)
+                    Confirm Order (Takeaway)
                 </button>
             </div>
 

@@ -100,31 +100,55 @@ function AuditPage() {
                 <head>
                     <title>Print Receipts</title>
                     <style>
-                        .receipt {
-                            font-family: Arial, sans-serif;
-                            margin-bottom: 20px;
-                        }
-                        h1, h2 {
-                            margin: 0;
-                        }
-                        h3 {
-                            margin: 10px 0;
-                        }
-                        img {
-                            max-height: 50px;
-                        }
-                        /* Add dotted lines between sections */
-                        .dotted-line {
-                            border: none;
-                            border-top: 2px dotted black;
-                            margin: 20px 0;
+                        @media print {
+                            @page {
+                                size: 80mm 210mm; /* Set exact paper size */
+                                margin: 0; /* Remove all margins */
+                            }
+                            body {
+                                margin: 0;
+                                padding: 0;
+                                width: 80mm; /* Set width to 80mm to fit small receipt paper */
+                                height: auto; /* Auto height for content */
+                                font-size: 10px; /* Small font size to fit content */
+                                font-family: Arial, sans-serif;
+                            }
+                            .receipt {
+                                width: 100%; /* Use full width of the paper */
+                                margin: 0;
+                                padding: 5px; /* Add a small padding */
+                            }
+                            h2 {
+                                font-size: 12px;
+                                margin: 0;
+                                text-align: center;
+                            }
+                            ul {
+                                list-style-type: none;
+                                padding: 0;
+                                margin: 0;
+                            }
+                            li {
+                                margin: 3px 0;
+                                font-size: 10px;
+                            }
+                            h3 {
+                                font-size: 10px;
+                                margin: 5px 0;
+                                text-align: right;
+                            }
+                            .dotted-line {
+                                border: none;
+                                border-top: 1px dotted black;
+                                margin: 5px 0;
+                            }
                         }
                     </style>
                 </head>
                 <body>
                     ${printContent}
-                    <h4>Developed by Sajjad/Shayan Zaheer</h4>
-                    <h4>Contact: +92 336 2199705
+                    <h4>Designed and Developed by IdeaFlux Agency</h4>
+                    <h4>Contact No +92336-2199705</h4>
                 </body>
             </html>
         `);

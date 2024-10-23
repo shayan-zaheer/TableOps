@@ -15,7 +15,7 @@ function OrderPage() {
     const deliveryOrders = useSelector((store) => store.order.deliveryOrders);
     const [createdOrder, setCreatedOrder] = useState(null);
 
-    console.log(orderList);
+    console.log("ORDERLIST", orderList);
 
     if (!orderList || orderList.length === 0) {
         return (

@@ -3,18 +3,19 @@ import { useDispatch } from "react-redux";
 import { orderActions } from "../store/orderSlice";
 import toast from "react-hot-toast";
 
-function Product({ name, price, image, onDelete }) {
+function Product({ name, price, image, onDelete, category }) {
     const dispatch = useDispatch();
     const quantityRef = useRef();
     const conPrice = price;
     const [priceState, setPriceState] = useState(price);
-
+    
     const handleAddItem = () => {
         const quantity = +quantityRef.current.value;
         dispatch(orderActions.addItem({
             name,
             price: conPrice,
             quantity,
+            category
         }));
 
         toast.success(`${quantity} ${name}(s) added to order!`, {

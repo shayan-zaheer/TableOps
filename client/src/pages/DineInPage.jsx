@@ -189,6 +189,52 @@ function DineInPage() {
         }
     };
 
+    const printTokenByCategory = (order) => {
+        console.log("REALEST", order);
+    
+        const groupedItems = order.products.reduce((acc, item) => {
+            const category = item?.product?.category?.title || 'Uncategorized';
+            if (!acc[category]) {
+                acc[category] = [];
+            }
+            acc[category].push(item);
+            return acc;
+        }, {});
+    
+        const printCategory = (category, items) => {
+            const tokenWindow = window.open('', 'PRINT', 'height=400,width=600');
+            
+            if (!tokenWindow) {
+                console.error('Unable to open print window');
+                return;
+            }
+    
+            tokenWindow.document.write(`<html><head><title>${category} Token for Order ${order._id}</title>`);
+            tokenWindow.document.write('</head><body>');
+            tokenWindow.document.write(`<h1>${category} Receipt for Order ID: ${order._id}</h1>`);
+            tokenWindow.document.write(`<p>Waiter: ${order?.waiter?.name || 'Unknown'}</p>`);
+            
+            items.forEach(item => {
+                tokenWindow.document.write(`<p>${item.product.name} - Quantity: ${item.quantity}</p>`);
+            });
+    
+            tokenWindow.document.write('</body></html>');
+            tokenWindow.document.close();
+            tokenWindow.focus();
+    
+            tokenWindow.print();
+            setTimeout(() => {
+                tokenWindow.close();
+            }, 500);
+        };
+    
+        Object.entries(groupedItems).forEach(([category, items], index) => {
+            setTimeout(() => {
+                printCategory(category, items);
+            }, index * 700);
+        });
+    };
+
     if (loading) {
         return <LoadingSpinner />;
     }
@@ -250,10 +296,10 @@ function DineInPage() {
                                 Mark as Completed
                             </button>
                             <button
-                                className="bg-red-500 text-white px-4 py-2 rounded"
-                                onClick={() => handleDeleteOrder(order._id)}
+                                className="bg-blue-500 text-white px-4 py-2 rounded"
+                                onClick={() => printTokenByCategory(order)}
                             >
-                                Delete Order
+                                Print Token
                             </button>
                         </div>
                     </li>
