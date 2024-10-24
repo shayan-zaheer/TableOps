@@ -37,7 +37,8 @@ function DineInPage() {
                 const productOptions = response.data.map(product => ({
                     value: product._id,
                     label: product.name,
-                    price: product.price
+                    price: product.price,
+                    category: product.category
                 }));
 
                 setProducts(productOptions);
@@ -49,17 +50,6 @@ function DineInPage() {
 
         fetchProducts();
     }, []);
-
-    const handleDeleteOrder = async (orderId) => {
-        try {
-            await axios.delete(`http://localhost:8000/api/orders/${orderId}`);
-            setDineInOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));
-            toast.success('Order deleted successfully');
-        } catch (error) {
-            console.error('Error deleting order:', error);
-            toast.error('Error deleting order');
-        }
-    };
 
     const fetchProductById = async (id) => {
         const response = await axios.get(`http://localhost:8000/api/products/${id}`);
@@ -105,7 +95,6 @@ function DineInPage() {
                         }
                     });
     
-                    // Calculate the total amount
                     const totalAmount = updatedProducts.reduce((total, product) => {
                         const productPrice = product.product.price;
                         return total + (productPrice * product.quantity);
@@ -127,12 +116,18 @@ function DineInPage() {
         }
     };
 
+
+
     const handleItemChange = (orderId, selectedOptions) => {
+
+        console.log(selectedOptions);
+
         const items = selectedOptions.map(option => ({
             product: {
                 _id: option.value,
                 name: option.label,
-                price: option.price
+                price: option.price,
+                category: option?.category?.title
             },
             quantity: 1
         }));
@@ -190,10 +185,8 @@ function DineInPage() {
     };
 
     const printTokenByCategory = (order) => {
-        console.log("REALEST", order);
-    
-        const groupedItems = order.products.reduce((acc, item) => {
-            const category = item?.product?.category?.title || 'Uncategorized';
+            const groupedItems = order.products.reduce((acc, item) => {
+            const category = item?.product?.category?.title || item?.product?.category || 'Uncategorized';
             if (!acc[category]) {
                 acc[category] = [];
             }

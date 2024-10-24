@@ -34,13 +34,15 @@ const MenuPage = () => {
         fetchCategories();
     }, [dispatch]); 
 
+    console.log(categories);
+
     return (
-        <div className="flex flex-col items-center py-8 h-100 bg-[rgb(255,206,146)]">
+        <div className="flex flex-col items-center py-4 h-auto bg-[rgb(255,206,146)]">
             {categories.length > 0 ? (
                 categories.map((category) => (
-                    <div key={category._id} className="w-full max-w-4xl mb-10">
-                        <h2 className="text-3xl font-bold mb-4 text-center">{category.title}</h2>
-                        <div className="flex flex-row justify-center flex-wrap gap-6">
+                    <div key={category._id} className="w-full max-w-4xl mb-6">
+                        <h2 className="text-2xl font-bold mb-2 text-center">{category.title}</h2>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {category.products.map((product) => (
                                 <Product
                                     key={product._id}

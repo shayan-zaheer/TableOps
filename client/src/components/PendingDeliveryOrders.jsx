@@ -164,12 +164,6 @@ function PendingDeliveryOrders() {
                                 Mark as Completed
                             </button>
                             <button
-                                className="bg-red-500 text-white px-4 py-2 rounded"
-                                onClick={() => handleDeleteOrder(order._id)}
-                            >
-                                Delete Order
-                            </button>
-                            <button
                                 className="bg-blue-500 text-white px-4 py-2 rounded"
                                 onClick={() => printTokenByCategory(order)}
                             >

@@ -6,19 +6,19 @@ import { auditActions } from "../store/auditSlice";
 function AuditPage() {
     const dispatch = useDispatch();
     const logs = useSelector((store) => store.audit.audit);
-    
-    const [isOpen, setIsOpen] = useState(false);
+
     const [filteredLogs, setFilteredLogs] = useState([]);
     const [selectedYear, setSelectedYear] = useState("");
     const [selectedMonth, setSelectedMonth] = useState("");
     const [selectedDay, setSelectedDay] = useState("");
+    const [selectedType, setSelectedType] = useState("");
 
     useEffect(() => {
         const getLogs = async () => {
             try {
                 const result = await axios.get("http://localhost:8000/api/audit");
                 dispatch(auditActions.initialAddAudits(result?.data?.data));
-            } catch(err) {
+            } catch (err) {
                 console.error(err);
             }
         };
@@ -26,61 +26,58 @@ function AuditPage() {
         getLogs();
     }, [dispatch]);
 
-    const toggleCollapse = () => {
-        setIsOpen((prev) => !prev);
-    };
-        
     const printReceipts = (orderId) => {
         const categoriesMap = {};
-    
-        const selectedAudit = filteredLogs.find(audit => audit.order._id === orderId);
+        
+        const selectedAudit = filteredLogs.find((audit) => audit?.order?._id === orderId);
     
         if (!selectedAudit) {
             console.error("No audit found for the given order ID.");
             return;
         }
     
-        const products = selectedAudit.order.products;
+        const products = selectedAudit?.order?.products || [];
     
-        products.forEach(item => {
+        products.forEach((item) => {
             const productCategory = item.product.category.title;
-  
+            
             if (!categoriesMap[productCategory]) {
                 categoriesMap[productCategory] = {
                     category: productCategory,
                     items: [],
-                    totalAmount: 0
+                    totalAmount: 0,
                 };
             }
- 
+    
             categoriesMap[productCategory].items.push(item);
             categoriesMap[productCategory].totalAmount += item.product.price * item.quantity;
         });
     
         let printContent = `
-            <div style="display: flex; align-items: center;">
-                <img src="/images/logo.png" alt="Logo" style="height: 50px; margin-right: 10px;" />
-                <h1>Order ID: ${orderId}</h1>
-            </div>`;
-
-        if (selectedAudit.order.type === "dinein") {
-            const waiterName = selectedAudit.order.waiter?.name || "N/A";
-            printContent += `<p>Waiter: ${waiterName}</p>`;
-        } else if(selectedAudit.order.type === "delivery"){
-
-            const riderName = selectedAudit.order.rider?.name || "N/A";
-            const customerNumber = selectedAudit.order?.customerNumber || "N/A";
-            printContent += `<p>Rider: ${riderName}</p>
-                            <p>Customer Number: ${customerNumber}</p>
-            `
-        };
+        <div style="display: flex; align-items: center;">
+        <img src="/images/logo.png" alt="Logo" style="height: 50px; margin-right: 10px;" />
+        <h1>Order ID: ${orderId}</h1>
+        </div>`;
     
-        Object.values(categoriesMap).forEach(categoryData => {
+        if (selectedAudit?.order?.type === "dinein") {
+            const waiterName = selectedAudit?.order?.waiter?.name || "N/A";
+            printContent += `<p>Waiter: ${waiterName}</p>`;
+        } else if (selectedAudit?.order?.type === "delivery") {
+            const riderName = selectedAudit?.order?.rider?.name || "N/A";
+            const customerNumber = selectedAudit?.order?.customerNumber || "N/A";
+            printContent += `<p>Rider: ${riderName}</p>
+                            <p>Customer Number: ${customerNumber}</p>`;
+        }
+    
+        let totalOrderAmount = 0;
+        Object.values(categoriesMap).forEach((categoryData) => {
             const { category, items, totalAmount } = categoryData;
+    
+            totalOrderAmount += totalAmount;
     
             printContent += `
                 <div class="receipt">
-                    <h2>${category} Receipt (Order ID: ${orderId})</h2> <!-- Order ID in each category -->
+                    <h2>${category} Receipt (Order ID: ${orderId})</h2>
                     <ul>
                         ${items.map(item => `
                             <li>
@@ -102,21 +99,21 @@ function AuditPage() {
                     <style>
                         @media print {
                             @page {
-                                size: 80mm 210mm; /* Set exact paper size */
-                                margin: 0; /* Remove all margins */
+                                size: 80mm 210mm; 
+                                margin: 0; 
                             }
                             body {
                                 margin: 0;
                                 padding: 0;
-                                width: 80mm; /* Set width to 80mm to fit small receipt paper */
-                                height: auto; /* Auto height for content */
-                                font-size: 10px; /* Small font size to fit content */
+                                width: 80mm; 
+                                height: auto; 
+                                font-size: 10px; 
                                 font-family: Arial, sans-serif;
                             }
                             .receipt {
-                                width: 100%; /* Use full width of the paper */
+                                width: 100%; 
                                 margin: 0;
-                                padding: 5px; /* Add a small padding */
+                                padding: 5px; 
                             }
                             h2 {
                                 font-size: 12px;
@@ -147,6 +144,8 @@ function AuditPage() {
                 </head>
                 <body>
                     ${printContent}
+                    <h4>Total Order Amount: ${totalOrderAmount} PKR</h4>
+                    <hr class="dotted-line" />
                     <h4>Designed and Developed by IdeaFlux Agency</h4>
                     <h4>Contact No +92336-2199705</h4>
                 </body>
@@ -156,6 +155,7 @@ function AuditPage() {
         printWindow.print();
     };
     
+
     useEffect(() => {
         let filtered = logs;
 
@@ -180,8 +180,12 @@ function AuditPage() {
             });
         }
 
+        if (selectedType) {
+            filtered = filtered.filter((order) => order.order.type === selectedType);
+        }
+
         setFilteredLogs(filtered);
-    }, [selectedYear, selectedMonth, selectedDay, logs]);
+    }, [selectedYear, selectedMonth, selectedDay, selectedType, logs]);
 
     return (
         <div className="p-4 bg-[rgb(207,156,90)] rounded-md mt-4">
@@ -189,7 +193,7 @@ function AuditPage() {
 
             <div className="flex space-x-4 mb-4">
                 <select
-                    className="bg-[rgb(255,206,146)] text-black p-2 rounded" 
+                    className="bg-[rgb(255,206,146)] text-black p-2 rounded"
                     value={selectedYear}
                     onChange={(e) => setSelectedYear(e.target.value)}
                 >
@@ -202,7 +206,7 @@ function AuditPage() {
                 </select>
 
                 <select
-                    className="bg-[rgb(255,206,146)] text-black p-2 rounded" 
+                    className="bg-[rgb(255,206,146)] text-black p-2 rounded"
                     value={selectedMonth}
                     onChange={(e) => setSelectedMonth(e.target.value)}
                 >
@@ -239,58 +243,46 @@ function AuditPage() {
                         </option>
                     ))}
                 </select>
+
+                <select
+                    className="bg-[rgb(255,206,146)] text-black p-2 rounded"
+                    value={selectedType}
+                    onChange={(e) => setSelectedType(e.target.value)}
+                >
+                    <option value="">Select Order Type</option>
+                    <option value="dinein">Dine In</option>
+                    <option value="delivery">Delivery</option>
+                    <option value="takeaway">Takeaway</option>
+                </select>
             </div>
-            
-            <button
-                onClick={toggleCollapse}
-                className="bg-[rgb(255,206,146)] text-black cursor-pointer p-4 w-full border-none text-left outline-none text-lg hover:bg-[rgb(207,156,90)]"
-            >
-                {isOpen ? "Hide Logs" : "Show Logs"}
-            </button>
 
-            {isOpen && (
-                <div className="bg-[rgb(207,156,90)] rounded-md p-4">
-                    {filteredLogs.length === 0 ? (
-                        <p className="text-gray-900">No audit logs available for this period.</p>
-                    ) : (
-                        filteredLogs.map((order, index) => (
-                            <div
-                                key={order.order._id}
-                                className="px-4 py-4 overflow-hidden bg-[rgb(255,206,146)] mb-2 rounded"
-                            >
-                                <p className="float-right font-normal text-black">{new Date(order.createdAt).toLocaleTimeString()}</p>
-                                <h3 className="font-bold text-black">Order {order.order._id}</h3>
-                                <p className="text-black">Total Amount: Rs. {order.order.totalAmount}</p>
-                                
+            <table className="table-auto w-full">
+                <thead>
+                    <tr className="bg-[rgb(255,206,146)] text-black">
+                        <th className="p-2">Order ID</th>
+                        <th className="p-2">Date</th>
+                        <th className="p-2">Type</th>
+                        <th className="p-2">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {filteredLogs.map((audit) => (
+                        <tr key={audit.order?._id} className="border-b">
+                            <td className="p-2">{audit.order?._id || "N/A"}</td>
+                            <td className="p-2">{new Date(audit.order?.createdAt).toLocaleString() || "N/A"}</td>
+                            <td className="p-2">{audit.order?.type || "N/A"}</td>
+                            <td className="p-2">
                                 <button
-                                    onClick={() => printReceipts(order.order._id)}
-                                    className="mt-2 float-right bg-blue-500 text-white px-4 py-2 rounded"
+                                    onClick={() => printReceipts(audit.order?._id)}
+                                    className="bg-white text-black px-2 py-1 rounded"
                                 >
-                                    Print Receipts
-                                </button>   
-
-                                {order?.order?.type === "delivery" && (
-                                   <>
-                                     <p className="text-black">Rider: <i>{order?.order?.rider?.name}</i></p>
-                                     <p className="text-black">Customer Number: <i>{order?.order?.customerNumber}</i></p> 
-                                   </> 
-                                )}
-
-                                {order?.order?.type === "dinein" && (
-                                    <p className="text-black">Waiter: {order?.order?.waiter?.name}</p>  
-                                )}
-                                
-                                <h4 className="font-semibold text-black">Items:</h4>
-                                {order.order.products.map((item, idx) => (
-                                    <p key={idx} className="text-black">
-                                        {item.product.name} (Quantity: {item.quantity})
-                                    </p>
-                                ))}
-                            </div>
-                        ))
-                    )}
-                </div>
-            )}
+                                    Print
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 }
