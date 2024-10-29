@@ -229,7 +229,7 @@ function AuditPage() {
                     onChange={(e) => setSelectedYear(e.target.value)}
                 >
                     <option value="">Select Year</option>
-                    {[2024, 2023, 2022].map((year) => (
+                    {[2026, 2025, 2024].map((year) => (
                         <option key={year} value={year}>
                             {year}
                         </option>
@@ -291,7 +291,7 @@ function AuditPage() {
                     className="bg-[rgb(255,206,146)] text-black p-2 rounded"
                     onChange={e => setSelectedFood(e.target.value)}
                 >
-                    <option value="" selected>Select Food Item</option>
+                    <option value="">Select Food Item</option>
                     {products.map(product => (
                         <option key={product._id} value={product.label}>{product.label}</option>
                     ))}

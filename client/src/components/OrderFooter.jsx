@@ -117,7 +117,7 @@ function OrderFooter() {
     return (
         <div>
             <div className="flex justify-between items-center mt-4 p-3 bg-[rgb(109,94,76)] text-white rounded">
-                <span className="font-semibold">Total Price: Rs. {orderList[0]?.dealPrice ? orderList[0]?.dealPrice : totalPrice}</span>
+                <span className="font-semibold">Total Price: Rs. {totalPrice}</span>
                 <button onClick={handleConfirmOrder} className="text-green-500 hover:text-green-700 font-semibold">
                     Confirm Order (Takeaway)
                 </button>

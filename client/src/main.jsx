@@ -7,8 +7,8 @@ import MenuPage from './pages/MenuPage.jsx'
 import AuditPage from './pages/AuditPage.jsx'
 import OrderPage from "./pages/OrderPage.jsx"
 import store from './store/index.js'
-// import CategoriesPage from './pages/CategoriesPage.jsx'
-// import ProductsPage from './pages/ProductsPage.jsx'
+import CategoriesPage from './pages/CategoriesPage.jsx'
+import ProductsPage from './pages/ProductsPage.jsx'
 import RidersPage from './pages/RidersPage.jsx'
 import DeliveryPage from './pages/DeliveryPage.jsx'
 import DineInPage from './pages/DineInPage.jsx'
@@ -47,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "/waiters",
         element: <WaitersPage />
+      },
+      {
+        path: "/products",
+        element: <ProductsPage />
       }
     ]
   },

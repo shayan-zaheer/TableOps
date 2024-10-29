@@ -1,22 +1,8 @@
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 function Header() {
     const { pathname } = useLocation();
     
-    const [isProductsDropdownOpen, setProductsDropdownOpen] = useState(false);
-    const [isCategoriesDropdownOpen, setCategoriesDropdownOpen] = useState(false);
-
-    const toggleProductsDropdown = () => {
-        setProductsDropdownOpen((prev) => !prev);
-        setCategoriesDropdownOpen(false);
-    };
-
-    const toggleCategoriesDropdown = () => {
-        setCategoriesDropdownOpen((prev) => !prev);
-        setProductsDropdownOpen(false);
-    };
-
     return (
         <div className="flex flex-row items-center justify-between border border-black py-2 px-6 bg-[rgb(249,159,49)] text-black drop-shadow-xl">
             <div className="flex items-center justify-start gap-4">
