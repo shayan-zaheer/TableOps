@@ -12,6 +12,8 @@ function AuditPage() {
     const [selectedMonth, setSelectedMonth] = useState("");
     const [selectedDay, setSelectedDay] = useState("");
     const [selectedType, setSelectedType] = useState("");
+    const [products, setProducts] = useState([]);
+    const [selectedFood, setSelectedFood] = useState(""); 
 
     useEffect(() => {
         const getLogs = async () => {
@@ -25,6 +27,27 @@ function AuditPage() {
 
         getLogs();
     }, [dispatch]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/api/products');
+                const productOptions = response.data.map(product => ({
+                    value: product._id,
+                    label: product.name,
+                    price: product.price,
+                    category: product.category
+                }));
+
+                setProducts(productOptions);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+                toast.error('Error fetching products');
+            }
+        };
+
+        fetchProducts();
+    }, []);
 
     const printReceipts = (orderId) => {
         const categoriesMap = {};
@@ -184,8 +207,16 @@ function AuditPage() {
             filtered = filtered.filter((order) => order.order.type === selectedType);
         }
 
+        if (selectedFood) {
+            filtered = filtered.filter((order) => 
+                order?.order?.products?.find((product) => product?.product?.name === selectedFood)
+            );
+        }
+        
         setFilteredLogs(filtered);
-    }, [selectedYear, selectedMonth, selectedDay, selectedType, logs]);
+    }, [selectedYear, selectedMonth, selectedDay, selectedType, selectedFood, logs]);
+
+    console.log(filteredLogs)
 
     return (
         <div className="p-4 bg-[rgb(207,156,90)] rounded-md mt-4">
@@ -254,6 +285,18 @@ function AuditPage() {
                     <option value="delivery">Delivery</option>
                     <option value="takeaway">Takeaway</option>
                 </select>
+
+                <select
+                    value={selectedFood}
+                    className="bg-[rgb(255,206,146)] text-black p-2 rounded"
+                    onChange={e => setSelectedFood(e.target.value)}
+                >
+                    <option value="" selected>Select Food Item</option>
+                    {products.map(product => (
+                        <option key={product._id} value={product.label}>{product.label}</option>
+                    ))}
+                </select>
+
             </div>
 
             <table className="table-auto w-full">
