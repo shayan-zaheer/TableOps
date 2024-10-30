@@ -77,9 +77,10 @@ function AuditPage() {
         });
     
         let printContent = `
-        <div style="display: flex; align-items: center;">
+        <div style="display: flex; flex-direction: column; align-items: center;">
         <img src="/images/logo.png" alt="Logo" style="height: 50px; margin-right: 10px;" />
         <h1>Order ID: ${orderId}</h1>
+        <h1>Order No: ${selectedAudit?.order?.orderNumber}</h1>
         </div>`;
     
         if (selectedAudit?.order?.type === "dinein") {
@@ -303,6 +304,7 @@ function AuditPage() {
                 <thead>
                     <tr className="text-left bg-[rgb(255,206,146)] text-black">
                         <th className="p-2">Order ID</th>
+                        <th className="p-2">Order No.</th>
                         <th className="p-2">Amount</th>
                         <th className="p-2">Date</th>
                         <th className="p-2">Type</th>
@@ -313,6 +315,7 @@ function AuditPage() {
                     {filteredLogs.map((audit) => (
                         <tr key={audit.order?._id} className="border-b">
                             <td className="p-2">{audit.order?._id || "N/A"}</td>
+                            <td className="p-2">{audit.order?.orderNumber || "N/A"}</td>
                             <td className="p-2">Rs. {audit?.order?.totalAmount}</td>
                             <td className="p-2">{new Date(audit.order?.createdAt).toLocaleString() || "N/A"}</td>
                             <td className="p-2">{audit.order?.type || "N/A"}</td>

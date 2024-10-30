@@ -165,6 +165,7 @@ function DineInPage() {
                     name: item.product.name,
                     quantity: item.quantity,
                 })),
+                orderNumber: orderToUpdate?.orderNumber,
                 createdAt: Date.now(),
             };
 
@@ -205,6 +206,7 @@ function DineInPage() {
             tokenWindow.document.write(`<html><head><title>${category} Token for Order ${order._id}</title>`);
             tokenWindow.document.write('</head><body>');
             tokenWindow.document.write(`<h1>${category} Receipt for Order ID: ${order._id}</h1>`);
+            tokenWindow.document.write(`<h2>Order Number: ${order?.orderNumber}</h2>`);
             tokenWindow.document.write(`<p>Waiter: ${order?.waiter?.name || 'Unknown'}</p>`);
             
             items.forEach(item => {
