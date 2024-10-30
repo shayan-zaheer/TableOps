@@ -144,6 +144,7 @@ function PendingDeliveryOrders() {
                     <li key={order._id} className="bg-white p-4 shadow rounded flex justify-between items-center">
                         <div>
                             <p><strong>Order ID:</strong> {order._id}</p>
+                            <p><strong>Order Number:</strong> {order?.orderNumber}</p>
                             <p><strong>Customer Number:</strong> {order?.customerNumber}</p>
                             <p><strong>Products:</strong></p>
                             <ul className="list-disc ml-4">

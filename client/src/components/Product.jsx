@@ -74,7 +74,7 @@ function Product({ name = "", price, image, onDelete, category = "" }) {
             dispatch(
                 orderActions.addItem({
                     name: newName,
-                    price: pizzaOptions[newName],
+                    price: conPrice,
                     quantity,
                     category,
                 })

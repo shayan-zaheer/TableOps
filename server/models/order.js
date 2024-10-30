@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
+    orderNumber: {
+        type: Number
+    },
     products: [
         {
             product: {
@@ -46,6 +49,25 @@ const orderSchema = new mongoose.Schema({
     },
 });
 
-const Order = mongoose.model('Order', orderSchema);
+orderSchema.pre('save', async function (next) {
+    if (!this.isNew) return next();
 
+    const today = new Date().setHours(0, 0, 0, 0);
+    try {
+        const lastOrder = await mongoose.model('Order').findOne().sort({ createdAt: -1 });
+
+        if (!lastOrder || lastOrder.createdAt.setHours(0, 0, 0, 0) < today) {
+            this.orderNumber = 1;
+        } else {
+            this.orderNumber = (lastOrder.orderNumber || 0) + 1;
+        }
+
+        next();
+    } catch (error) {
+        console.error("Error in pre-save hook:", error);
+        next(error);
+    }
+});
+
+const Order = mongoose.model('Order', orderSchema);
 module.exports = Order;
