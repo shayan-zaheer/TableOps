@@ -20,7 +20,7 @@ function OrderFooter() {
         }
     };
 
-    const printTokenByCategory = (orderId) => {
+    const printTokenByCategory = (orderId, orderNumber) => {
         const groupedItems = orderList.reduce((acc, item) => {
             const category = item?.category || 'Uncategorized';
             if (!acc[category]) {
@@ -41,6 +41,7 @@ function OrderFooter() {
             tokenWindow.document.write(`<html><head><title>${category} Token</title>`);
             tokenWindow.document.write('</head><body>');
             tokenWindow.document.write(`<h1>Token for Order ${orderId}</h1>`);
+            tokenWindow.document.write(`<h2>Order No: ${orderNumber}</h2>`);
             tokenWindow.document.write(`<h1>${category} Receipt</h1>`);
 
             items.forEach(item => {
@@ -66,13 +67,6 @@ function OrderFooter() {
     const handleOrderTypeSelection = async (type) => {
         setShowDialog(false);
 
-        const auditLogEntry = {
-            totalQuantity: orderList.reduce((total, order) => total + order.quantity, 0),
-            totalPrice,
-            items: orderList.map(order => ({ name: order.name, quantity: order.quantity })),
-            createdAt: Date.now(),
-        };
-
         try {
             if (type === "takeaway") {
                 let response;
@@ -91,9 +85,16 @@ function OrderFooter() {
                 }
 
                 if (response.status === 201) {
-                    const orderId = response.data._id;
+                    const orderId = response?.data?._id;
+                    const orderNumber = response?.data?.orderNumber;
 
-                    console.log(orderId);
+                    const auditLogEntry = {
+                        totalQuantity: orderList.reduce((total, order) => total + order.quantity, 0),
+                        totalPrice,
+                        items: orderList.map(order => ({ name: order.name, quantity: order.quantity })),
+                        createdAt: Date.now(),
+                        orderNumber: orderNumber
+                    };            
 
                     await axios.post('http://localhost:8000/api/audit/', {
                         action: "Takeaway Order Confirmed",
@@ -101,7 +102,7 @@ function OrderFooter() {
                         orderId
                     });
                     
-                    printTokenByCategory(orderId);
+                    printTokenByCategory(orderId, orderNumber);
 
                     toast.success(`Takeaway order confirmed! Total Price: Rs. ${totalPrice}`);
                     dispatch(orderActions.removeOrder());
