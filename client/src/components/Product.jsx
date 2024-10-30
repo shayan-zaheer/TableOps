@@ -65,7 +65,7 @@ function Product({ name = "", price, image, onDelete, category = "" }) {
     const handleAddItem = () => {
         const quantity = +quantityRef.current.value;
         if (category.includes("Pizza")) {
-            if (!selectedSize || !selectedFlavor) {
+            if ((newName === "Pizza") && (!selectedSize || !selectedFlavor)) {
                 toast.error("Please select both size and flavor for pizza.", {
                     duration: 3000,
                 });
