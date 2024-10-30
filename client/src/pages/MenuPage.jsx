@@ -1,7 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import {
-    setCategories,
-} from "../store/categorySlice";
+import { setCategories } from "../store/categorySlice";
 import axios from "axios";
 import Product from "../components/Product";
 import { useEffect } from "react";
@@ -35,7 +33,12 @@ const MenuPage = () => {
                             {category.title}
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            {category.products.map((product) => (
+                            {(category.title === "Pasta & Pizza Fries"
+                                ? category.products.filter(
+                                      (product) => product.role === "normal"
+                                  )
+                                : category.products
+                            ).map((product) => (
                                 <Product
                                     key={product._id}
                                     name={product.name}
