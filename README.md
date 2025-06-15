@@ -1,11 +1,11 @@
 <div align="center">
 
-# 🍗 MRBROAST-PANEL  
+# 🍗 TableOps 
 *Empowering Seamless Management, Elevating User Experience*
 
-![last-commit](https://img.shields.io/github/last-commit/shayan-zaheer/mrbroast-panel?style=flat&logo=git&logoColor=white&color=0080ff)
-![repo-top-language](https://img.shields.io/github/languages/top/shayan-zaheer/mrbroast-panel?style=flat&color=0080ff)
-![repo-language-count](https://img.shields.io/github/languages/count/shayan-zaheer/mrbroast-panel?style=flat&color=0080ff)
+![last-commit](https://img.shields.io/github/last-commit/shayan-zaheer/TableOps?style=flat&logo=git&logoColor=white&color=0080ff)
+![repo-top-language](https://img.shields.io/github/languages/top/shayan-zaheer/TableOps?style=flat&color=0080ff)
+![repo-language-count](https://img.shields.io/github/languages/count/shayan-zaheer/TableOps?style=flat&color=0080ff)
 
 </div>
 
@@ -13,7 +13,7 @@
 
 ## 🧠 Overview
 
-**MRBROAST-PANEL** is a full-stack restaurant management system that integrates backend APIs, a modular React frontend, and admin controls to streamline day-to-day restaurant operations. This platform handles orders, products, staff, and promotions — making it a great candidate for evolving into a **restaurant SaaS (Software-as-a-Service)** solution.
+**TABLEOPS** is a full-stack restaurant management system that integrates backend APIs, a modular React frontend, and admin controls to streamline day-to-day restaurant operations. This platform handles orders, products, staff, and promotions — making it a great candidate for evolving into a **restaurant SaaS (Software-as-a-Service)** solution.
 
 ---
 
@@ -61,8 +61,8 @@ mrbroast-panel/
 ### Installation
 
 ```bash
-git clone https://github.com/shayan-zaheer/mrbroast-panel
-cd mrbroast-panel
+git clone https://github.com/shayan-zaheer/TableOps
+cd TableOps
 ```
 
 ### Environment Setup
@@ -92,10 +92,6 @@ npm run dev
 ## 📌 Future Scope
 
 > This project can be evolved into a **SaaS** product — an all-in-one restaurant operations panel.
-
-Some potential SaaS-style names you could explore:
-- **TableOps**
-
 With multi-tenancy, RBAC, and cloud deployment, this can power multiple restaurants from a single dashboard.
 
 ---
