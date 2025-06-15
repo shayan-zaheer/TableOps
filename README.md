@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🍗 TableOps 
+# TableOps 
 *Empowering Seamless Management, Elevating User Experience*
 
 ![last-commit](https://img.shields.io/github/last-commit/shayan-zaheer/TableOps?style=flat&logo=git&logoColor=white&color=0080ff)
@@ -39,7 +39,7 @@
 ## 🗂️ Folder Structure
 
 ```
-mrbroast-panel/
+TableOps/
 ├── client/         # React frontend
 ├── server/         # Express backend
 │   ├── models/
